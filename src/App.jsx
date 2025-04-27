@@ -19,8 +19,7 @@ function App() {
         <UploadButton onPdfUpload={handlePdfUpload} />
         {pdfData.url && (
           <>
-            <div className="file-info">Loaded: {pdfData.name}</div>
-            <PdfViewer pdfUrl={pdfData.url} />
+            <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
           </>
         )}
       </main>
