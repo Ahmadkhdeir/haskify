@@ -1,0 +1,36 @@
+.haskify-footer {
+  background-color: #e7e7e7;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Jura', sans-serif;
+  border-top: 1px solid #d0d0d0;
+  margin-top: auto; 
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+  margin: 0 auto;
+  font-size: 0.9rem;
+}
+
+.footer-link {
+  color: #333;
+  font-weight: 500;
+  font-size: 1.3rem;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s;
+}
+
+.footer-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.copyright {
+  color: #333;
+  font-weight: 500;
+  font-size: 1.3rem;
+}

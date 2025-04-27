@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.4",
     "react": "^19.0.0",
+    "react-chatbotify": "^2.0.0-beta.33",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.1.4"
   },
