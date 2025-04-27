@@ -1,0 +1,33 @@
+.pdf-viewer-wrapper {
+    margin-top: 0.5rem;
+  }
+  
+  .toggle-button {
+    background-color: #D9D9D9;
+    color: #333;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Jura', sans-serif;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .toggle-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  .toggle-button:active {
+    transform: translateY(0);
+  }
+  
+  .pdf-container {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }

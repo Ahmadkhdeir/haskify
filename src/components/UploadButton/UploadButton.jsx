@@ -1,19 +1,24 @@
 import React, { useRef, useState } from 'react';
 import './UploadButton.css';
 
-export default function UploadButton() {
+export default function UploadButton({ onPdfUpload }) {
   const fileInputRef = useRef(null);
-  const [fileName, setFileName] = useState('');
+  const [error, setError] = useState('');
 
-  const handleButtonClick = () => {
+  const handleUploadClick = () => {
     fileInputRef.current.click();
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFileName(file.name);
-      console.log("Selected file:", file.name);
+      if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+        setError('');
+        const pdfUrl = URL.createObjectURL(file);
+        onPdfUpload(pdfUrl, file.name);
+      } else {
+        setError('Please select a PDF file only');
+      }
     }
   };
 
@@ -23,17 +28,14 @@ export default function UploadButton() {
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept=".hs,.txt,.pdf"
+        accept=".pdf,application/pdf"
         style={{ display: 'none' }}
       />
-      <button 
-        className="upload-button"
-        onClick={handleButtonClick}
-      >
-        Upload Content
+      <button className="upload-button" onClick={handleUploadClick}>
+        Upload PDF
       </button>
-      <p className='note'>* only .pdf files allowed</p>
-      {fileName && <div className="file-name">Selected: {fileName}</div>}
+      <p className="note">Only .pdf files allowed</p>
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 }
