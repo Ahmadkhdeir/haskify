@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import './UploadButton.css';
 
 export default function UploadButton({ onPdfUpload }) {
   const fileInputRef = useRef(null);
-  const [error, setError] = useState('');
 
   const handleUploadClick = () => {
+    fileInputRef.current.value = ''; 
     fileInputRef.current.click();
   };
 
@@ -13,11 +13,8 @@ export default function UploadButton({ onPdfUpload }) {
     const file = e.target.files[0];
     if (file) {
       if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
-        setError('');
         const pdfUrl = URL.createObjectURL(file);
         onPdfUpload(pdfUrl, file.name);
-      } else {
-        setError('Please select a PDF file only');
       }
     }
   };
@@ -35,7 +32,6 @@ export default function UploadButton({ onPdfUpload }) {
         Upload PDF
       </button>
       <p className="note">Only .pdf files allowed</p>
-      {error && <div className="error-message">{error}</div>}
     </div>
   );
 }

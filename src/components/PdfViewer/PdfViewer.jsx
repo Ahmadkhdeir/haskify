@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PdfViewer.css';
 
 export default function PdfViewer({ pdfUrl, pdfName }) {
   const [isVisible, setIsVisible] = useState(true);
 
+  useEffect(() => {
+    return () => {
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl);
+      }
+    };
+  }, [pdfUrl]);
+
   if (!pdfUrl) return null;
 
   return (
     <div className="pdf-viewer-wrapper">
-        {pdfName && (
-        <div>
-          Loaded: <span className="file-name">{pdfName}</span>
-        </div>
-      )}
+      <div className="file-info">
+        Loaded: <span className="file-name">{pdfName}</span>
+      </div>
       
       <button 
         className="toggle-button"
@@ -24,11 +30,11 @@ export default function PdfViewer({ pdfUrl, pdfName }) {
       {isVisible && (
         <div className="pdf-container">
           <embed
+            key={pdfUrl} 
             src={pdfUrl}
             type="application/pdf"
             width="100%"
             height="100%"
-            title="PDF Viewer"
           />
         </div>
       )}

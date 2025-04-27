@@ -9,6 +9,10 @@ function App() {
   const [pdfData, setPdfData] = useState({ url: null, name: null });
 
   const handlePdfUpload = (url, name) => {
+    // Revoke previous URL if exists
+    if (pdfData.url) {
+      URL.revokeObjectURL(pdfData.url);
+    }
     setPdfData({ url, name });
   };
 
@@ -17,11 +21,7 @@ function App() {
       <Header />
       <main className="main-content">
         <UploadButton onPdfUpload={handlePdfUpload} />
-        {pdfData.url && (
-          <>
-            <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
-          </>
-        )}
+        <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
       </main>
       <Footer />
     </div>
