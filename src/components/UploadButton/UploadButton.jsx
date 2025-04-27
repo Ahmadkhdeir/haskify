@@ -32,6 +32,7 @@ export default function UploadButton() {
       >
         Upload Content
       </button>
+      <p className='note'>* only .pdf files allowed</p>
       {fileName && <div className="file-name">Selected: {fileName}</div>}
     </div>
   );
