@@ -4,12 +4,12 @@ import Footer from './Components/Footer/Footer';
 import UploadButton from './components/UploadButton/UploadButton';
 import PdfViewer from './components/PdfViewer/PdfViewer';
 import './App.css';
+import HaskellEditor from './Components/HaskellEditor/HaskellEditor';
 
 function App() {
   const [pdfData, setPdfData] = useState({ url: null, name: null });
 
   const handlePdfUpload = (url, name) => {
-    // Revoke previous URL if exists
     if (pdfData.url) {
       URL.revokeObjectURL(pdfData.url);
     }
@@ -22,6 +22,7 @@ function App() {
       <main className="main-content">
         <UploadButton onPdfUpload={handlePdfUpload} />
         <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
+        <HaskellEditor />
       </main>
       <Footer />
     </div>

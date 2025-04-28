@@ -31,7 +31,7 @@ export default function UploadButton({ onPdfUpload }) {
       <button className="upload-button" onClick={handleUploadClick}>
         Upload PDF
       </button>
-      <p className="note">Only .pdf files allowed</p>
+      <p className="note">*Only .pdf files allowed</p>
     </div>
   );
 }

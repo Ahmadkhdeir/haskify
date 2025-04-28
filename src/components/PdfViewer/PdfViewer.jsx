@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './PdfViewer.css';
 
-export default function PdfViewer({ pdfUrl, pdfName }) {
+export default function PdfViewer({ pdfUrl}) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -16,9 +16,7 @@ export default function PdfViewer({ pdfUrl, pdfName }) {
 
   return (
     <div className="pdf-viewer-wrapper">
-      <div className="file-info">
-        Loaded: <span className="file-name">{pdfName}</span>
-      </div>
+
       
       <button 
         className="toggle-button"
