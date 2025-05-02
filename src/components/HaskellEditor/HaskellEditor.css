@@ -1,82 +1,68 @@
-.editor-split-container {
-    display: flex;
-    width: 100%;
-    height: 90vh;
-  }
-  
-  .editor-wrapper {
-    width: 45%;
-  }
-  
-  .empty-right {
-    width: 45%;
-  }
-  
-  .editor-section {
-    border: 1px solid #3a3a3a;
-    border-radius: 8px 8px 0 0;
-    overflow: hidden;
-    background: #1e1e1e;
-    height: 80%;
+.editor-container {
+  width: 100%; 
+  height: 100%; 
+  display: flex;
+  flex-direction: column;
+  min-height: 0; 
 }
-  
-  .output-section {
-    border: 1px solid #3a3a3a;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    background: #252526;
-    color: #d4d4d4;
-    padding: 1rem;
-    font-family: 'Jura', sans-serif;    
-  }
-  
-  .editor-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 1.2rem;
-    background: #252526;
-    border-bottom: 1px solid #3a3a3a;
-    font-family: 'Jura', sans-serif;
-  }
-  
-  .editor-header h3 {
-    margin: 0;
-    color: #d4d4d4;
-    font-weight: 500;
-  }
-  
-  .editor-actions {
-    display: flex;
-    gap: 0.8rem;
-  }
-  
-  .action-button {
-    background-color: #D9D9D9;
-    color: #333;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    transition: background-color 0.2s;
-    font-family: 'Jura', sans-serif;
 
-  }
-  
-  .action-button:hover {
-    background-color: #9c9c9c;
+.editor-section {
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1e1e1e;
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
-  
-  .output-header h3 {
-    margin: 0 0 0.5rem 0;
-    color: #d4d4d4;
-  }
-  
-  .output-content {
-    margin: 0;
-    white-space: pre-wrap;
-    font-family: monospace;
-    line-height: 1.5;
-  }
-  
+
+.output-section {
+  margin-top: 10px;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #252526;
+  color: #d4d4d4;
+}
+
+.editor-header {
+  font-family: 'Jura', sans-serif; 
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 1.2rem;
+  background: #252526;
+  border-bottom: 1px solid #3a3a3a;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.3rem;
+
+}
+
+.action-button {
+  background-color: #D9D9D9;
+  color: #333;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-family: 'Jura', sans-serif; 
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.editor-section > div {
+  flex: 1;
+  min-height: 0;
+}
+
+.editor-title {
+  font-family: 'Jura', sans-serif; 
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}

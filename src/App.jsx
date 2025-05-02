@@ -5,6 +5,7 @@ import UploadButton from './components/UploadButton/UploadButton';
 import PdfViewer from './components/PdfViewer/PdfViewer';
 import './App.css';
 import HaskellEditor from './Components/HaskellEditor/HaskellEditor';
+import AIAssistant from './Components/AIAssistant/AIAssistant';
 
 function App() {
   const [pdfData, setPdfData] = useState({ url: null, name: null });
@@ -22,7 +23,15 @@ function App() {
       <main className="main-content">
         <UploadButton onPdfUpload={handlePdfUpload} />
         <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
-        <HaskellEditor />
+        
+        <div className="editor-ai-container">
+          <div className="editor-column">
+            <HaskellEditor />
+          </div>
+          <div className="ai-column">
+            <AIAssistant />
+          </div>
+        </div>
       </main>
       <Footer />
     </div>
