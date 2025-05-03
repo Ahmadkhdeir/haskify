@@ -25,12 +25,12 @@ function App() {
         <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
         
         <div className="code-ai-grid">
-          <div>
+          <div className='grid-item'>
             <h2 className="shared-title">Code Editor</h2>
             <HaskellEditor />
           </div>
           
-          <div> 
+          <div className='grid-item'>
             <h2 className="shared-title">AI Assistant</h2>
             <AIAssistant />
           </div>

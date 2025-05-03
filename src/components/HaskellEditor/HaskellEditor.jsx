@@ -12,7 +12,7 @@ export default function HaskellEditor() {
       <div className="editor-section">
         
         <Editor
-          height="500px"
+          height="100%"
           language="haskell"
           theme="vs-dark"
           value={code}
@@ -21,7 +21,8 @@ export default function HaskellEditor() {
             minimap: { enabled: false },
             fontSize: 14,
             wordWrap: 'on',
-            lineNumbers: 'on'
+            lineNumbers: 'on',
+            scrollBeyondLastLine: false,
           }}
         />
       </div>

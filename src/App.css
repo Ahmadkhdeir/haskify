@@ -1,26 +1,37 @@
+:root {
+  --content-max-width: 1400px; 
+}
+
 .app-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh; 
 }
 
 .main-content {
   flex: 1;
-  padding: 1rem;
   display: flex;
   flex-direction: column;
+  align-items: center;  
+  padding: 1rem;
   width: 100%;
+  max-width: var(--content-max-width); 
+  margin: 0 auto; 
 }
 
 .code-ai-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; 
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   width: 100%; 
-  min-height: 70vh; 
+  min-height: 70vh;
+  padding: 0 1rem; 
 }
 
 .code-ai-grid > * {
+  min-width: 0;
+  width: 100%;
+  overflow: hidden; 
   min-width: 0; 
   display: flex;
   flex-direction: column;
@@ -33,4 +44,10 @@
   font-weight: bold;
   margin: 0 0 1rem 0;
   text-align: center; 
+}
+
+@media (max-width: 768px) {
+  .code-ai-grid {
+    grid-template-columns: 1fr;
+  }
 }

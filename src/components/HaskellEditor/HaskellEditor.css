@@ -1,6 +1,8 @@
 .editor-container {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .editor-section {
@@ -10,6 +12,8 @@
   background: #1e1e1e;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
 .output-section {
