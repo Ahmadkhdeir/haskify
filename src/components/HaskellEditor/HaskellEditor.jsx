@@ -7,16 +7,10 @@ export default function HaskellEditor() {
   const [output] = useState("> Output will appear here");
 
   return (
+    <>
+    <h2 className="editor-title">Code Editor</h2>
     <div className="editor-container">
-      <h2 className="editor-title">Code Editor</h2>
       <div className="editor-section">
-        <div className="editor-header">
-          <h3>Haskell Code Editor</h3>
-          <div className="editor-actions">
-            <button className="action-button">Copy</button>
-            <button className="action-button">Reset</button>
-          </div>
-        </div>
         
         <Editor
           height="400px"
@@ -38,5 +32,6 @@ export default function HaskellEditor() {
         <pre className="output-content">{output}</pre>
       </div>
     </div>
+    </>
   );
 }

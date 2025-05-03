@@ -15,29 +15,15 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  margin-top: 1rem;
 }
 
 .output-section {
-  margin-top: 10px;
   border: 1px solid #3a3a3a;
   border-radius: 8px;
   padding: 1rem;
   background: #252526;
   color: #d4d4d4;
-}
-
-.editor-header {
-  font-family: 'Jura', sans-serif; 
-  color: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  padding: 0.8rem 1.2rem;
-  background: #252526;
-  border-bottom: 1px solid #3a3a3a;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 1.3rem;
-
 }
 
 .action-button {

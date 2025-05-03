@@ -1,28 +1,36 @@
 .ai-assistant {
     width: 100%; 
     height: 100%; 
-    background: #f8f8f8;
     display: flex;
     flex-direction: column;
     min-height: 0; 
     padding-right: 1rem;
+    background: 
+    linear-gradient(to right, 
+      #89BCFF 0%, 
+      #89BCFF 40%, 
+      #FF86E1 60%, 
+      #FF86E1 100%);
+    border-radius: 8px;
   }
   
   .ai-header {
-    padding: 1rem;
-    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
   }
   
-  .ai-header h3 {
-    margin: 0;
-    color: #333;
-    font-family: 'Jura', sans-serif;
+  .ai-logo {
+    height: 40px; 
+    width: auto;
   }
-  
   .ai-subheader {
     margin: 0.5rem 0 0 0;
     color: #666;
     font-size: 0.9rem;
+    text-align: center;
   }
   
   .chat-container {
@@ -67,8 +75,6 @@
   .input-container {
     display: flex;
     padding: 1rem;
-    border-top: 1px solid #e0e0e0;
-    background: white;
   }
   
   .input-container input {
@@ -98,9 +104,10 @@
   .assistant-title {
     font-family: 'Jura', sans-serif; 
     color: #333;
-    margin-bottom: 10px;
     font-size: 2rem;
     font-weight: bold;
     text-align: center;
   }
+
+  
 

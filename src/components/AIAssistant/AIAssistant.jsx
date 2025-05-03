@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './AIAssistant.css';
-import logo from '../../assets/stars.png'; 
+import blackStars from '../../assets/blackStars.png'; 
+import whiteStars from '../../assets/whiteStars.png'; 
+
 
 export default function AIAssistant() {
   const [messages, setMessages] = useState([
@@ -23,18 +25,23 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="ai-assistant">
-    <h2 className="assistant-title">Feedback & Suggestions</h2>
-      <div className="ai-header">
-        <h3>Feedback & Suggestions</h3>
+    <>
+     <h2 className="assistant-title">Feedback & Suggestions</h2>
+     <div className="ai-assistant">
+        <div className="ai-header">
+            <img 
+                src={blackStars} 
+                alt="Haskify Logo" 
+                className="ai-logo"
+            />
         <p className="ai-subheader">Ask our AI anything</p>
-      </div>
+        </div>
 
       <div className="chat-container">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender.toLowerCase().replace(' ', '-')}`}>
             <div className="message-sender">
-              {message.sender === 'OUR AI' && <img src={logo} alt="AI Logo" className="ai-logo" />}
+              {message.sender === 'OUR AI' && <img src={whiteStars} alt="AI Logo" className="ai-logo" />}
               {message.sender}
             </div>
             <div className="message-text">
@@ -57,5 +64,6 @@ export default function AIAssistant() {
         <button onClick={handleSend}>Submit</button>
       </div>
     </div>
+    </>
   );
 }
