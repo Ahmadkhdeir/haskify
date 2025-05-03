@@ -3,11 +3,14 @@
     display: flex;
     flex-direction: column;
     padding-right: 1rem;
-    background: linear-gradient(135deg, #004cff21, #ffffff62);
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid #00000065;
-  }
+    background: 
+        linear-gradient(rgba(255, 250, 250, 0.85), rgba(255, 255, 246, 0.942)),
+        url('../src/assets/AIBackground.jpg') center/cover no-repeat;
+    position: relative;
+}
   
   .ai-header {
     margin: 15px 0;
