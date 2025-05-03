@@ -9,22 +9,30 @@
 }
 
 .editor-section {
-  flex: 1;
-  min-height: 0;
+  flex: 3;
+  min-height: 82%;
 }
 
 .output-section {
   border: 1px solid #3a3a3a;
-  padding: 0.4rem;
+  padding: 0.4rem 0.4rem 0.2rem;
   background: #252526;
   color: #d4d4d4;
   position: relative;
+  min-height: 18%;
+
 }
 
 .output-title {
   font-family: 'Jura', sans-serif;
   font-size: 14px;
   font-weight: lighter;
+  display: inline-block; 
+  padding-bottom: 2px; 
+  border-bottom: 1px solid #d4d4d4; 
+  margin-top: 2px; 
+  margin-bottom: 0px; 
+  margin-left: 2px;
 }
 
 .editor-title {
