@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './AIAssistant.css';
 import blackStars from '../../assets/blackStars.png'; 
 import whiteStars from '../../assets/whiteStars.png'; 
@@ -16,6 +16,11 @@ export default function AIAssistant() {
     }
   ]);
   const [input, setInput] = useState('');
+  const messagesEndRef = useRef(null);
+  
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const handleSend = () => {
     if (input.trim()) {
@@ -38,16 +43,11 @@ export default function AIAssistant() {
   };
 
   return (
-    <>
-     <div className="ai-assistant">
-        <div className="ai-header">
-            <img 
-                src={blackStars} 
-                alt="Haskify Logo" 
-                className="ai-logo"
-            />
+    <div className="ai-assistant">
+      <div className="ai-header">
+        <img src={blackStars} alt="Haskify Logo" className="ai-logo"/>
         <p className="ai-subheader">Ask our AI anything</p>
-        </div>
+      </div>
 
       <div className="chat-container">
         {messages.map((message, index) => (
@@ -63,6 +63,7 @@ export default function AIAssistant() {
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} /> 
       </div>
 
       <div className="input-container">
@@ -74,13 +75,12 @@ export default function AIAssistant() {
           onKeyPress={(e) => e.key === 'Enter' && handleSend()}
         />
         <img 
-            src={arrowIcon}
-            alt="Send"
-            className="send-icon"
-            onClick={handleSend}
+          src={arrowIcon}
+          alt="Send"
+          className="send-icon"
+          onClick={handleSend}
         />
       </div>
     </div>
-    </>
   );
 }
