@@ -22,9 +22,9 @@
 .code-ai-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  width: 100%; 
-  min-height: 70vh;
+  gap: 4rem;
+  width: 90%; 
+  min-height: 80vh;
   padding: 0 1rem; 
 }
 
@@ -41,7 +41,7 @@
   font-family: 'Jura', sans-serif;
   color: #333;
   font-size: 2rem; 
-  font-weight: bold;
+  font-weight: 400;
   margin: 0 0 1rem 0;
   text-align: center; 
 }

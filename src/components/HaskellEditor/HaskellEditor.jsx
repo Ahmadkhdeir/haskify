@@ -24,7 +24,7 @@ export default function HaskellEditor() {
             lineNumbers: 'on',
             scrollBeyondLastLine: false,
             padding: {
-              top: 10 
+              top: 20 
             },
             renderLineHighlight: 'none',
             lineDecorationsWidth: 10, 

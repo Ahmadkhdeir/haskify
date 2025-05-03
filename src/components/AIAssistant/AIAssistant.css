@@ -3,10 +3,10 @@
     display: flex;
     flex-direction: column;
     padding-right: 1rem;
-    background: linear-gradient(135deg, #ffffff62, #5b006547);
+    background: linear-gradient(135deg, #abaffc58, #ffffff62);
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid #ddd;
+    border: 1px solid #00000065;
   }
   
   .ai-header {
@@ -46,20 +46,20 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #5e5086;
+    color: #666;
     font-family: 'Jura', sans-serif;
+    flex-direction: row-reverse;
+    justify-content: flex-end; 
   }
   
   .message-text {
-    background: #f0f0f0;
+    background: #ffffff;
     padding: 0.8rem;
     border-radius: 8px;
     font-family: monospace;
     white-space: pre-wrap;
     line-height: 1.5;
-  }
-  .our-ai .message-text {
-    background: #e6f3ff;
+    margin-left: 10px; 
   }
   
   .input-container {
@@ -74,24 +74,24 @@
     border-radius: 4px;
     font-family: 'Jura', sans-serif;
   }
-  .input-container button {
-    background: #5e5086;
-    color: white;
-    border: none;
-    padding: 0 1.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Jura', sans-serif;
-    transition: background 0.2s;
+
+  .input-container {
+    position: relative;
+    padding: 1rem;
   }
-  .input-container button:hover {
-    background: #4a3d6b;
+
+  
+  .send-icon {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
   }
   
-  .assistant-title {
-    font-family: 'Jura', sans-serif;
-    color: #333;
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
+  .send-icon:hover {
+    opacity: 1;
   }

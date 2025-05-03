@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './AIAssistant.css';
 import blackStars from '../../assets/blackStars.png'; 
 import whiteStars from '../../assets/whiteStars.png'; 
-
+import arrowIcon from '../../assets/arrow.png';
 
 export default function AIAssistant() {
   const [messages, setMessages] = useState([
@@ -19,7 +19,20 @@ export default function AIAssistant() {
 
   const handleSend = () => {
     if (input.trim()) {
-      setMessages([...messages, { sender: 'ME', text: input }]);
+      const lastMessage = messages[messages.length - 1];
+      
+      if (lastMessage?.sender === 'ME') {
+        setMessages([
+          ...messages.slice(0, -1),
+          {
+            ...lastMessage,
+            text: `${lastMessage.text}\n${input}`
+          }
+        ]);
+      } else {
+        setMessages([...messages, { sender: 'ME', text: input }]);
+      }
+      
       setInput('');
     }
   };
@@ -38,7 +51,7 @@ export default function AIAssistant() {
 
       <div className="chat-container">
         {messages.map((message, index) => (
-          <div key={index} className={`message ${message.sender.toLowerCase().replace(' ', '-')}`}>
+          <div key={index} className="message">
             <div className="message-sender">
               {message.sender === 'OUR AI' && <img src={whiteStars} alt="AI Logo" className="ai-logo" />}
               {message.sender}
@@ -60,7 +73,12 @@ export default function AIAssistant() {
           placeholder="Ask me anything about your projects"
           onKeyPress={(e) => e.key === 'Enter' && handleSend()}
         />
-        <button onClick={handleSend}>Submit</button>
+        <img 
+            src={arrowIcon}
+            alt="Send"
+            className="send-icon"
+            onClick={handleSend}
+        />
       </div>
     </div>
     </>
