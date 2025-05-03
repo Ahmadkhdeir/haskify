@@ -8,12 +8,11 @@ export default function HaskellEditor() {
 
   return (
     <>
-    <h2 className="editor-title">Code Editor</h2>
     <div className="editor-container">
       <div className="editor-section">
         
         <Editor
-          height="400px"
+          height="500px"
           language="haskell"
           theme="vs-dark"
           value={code}
@@ -29,7 +28,7 @@ export default function HaskellEditor() {
 
       <div className="output-section">
         <h3>Output</h3>
-        <pre className="output-content">{output}</pre>
+        <pre>{output}</pre>
       </div>
     </div>
     </>

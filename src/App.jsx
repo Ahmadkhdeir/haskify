@@ -24,13 +24,17 @@ function App() {
         <UploadButton onPdfUpload={handlePdfUpload} />
         <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
         
-        <div className="editor-ai-container">
-          <div className="editor-column">
+        <div className="code-ai-grid">
+          <div>
+            <h2 className="shared-title">Code Editor</h2>
             <HaskellEditor />
           </div>
-          <div className="ai-column">
+          
+          <div> 
+            <h2 className="shared-title">AI Assistant</h2>
             <AIAssistant />
           </div>
+          
         </div>
       </main>
       <Footer />

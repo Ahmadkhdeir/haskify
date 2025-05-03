@@ -26,7 +26,6 @@ export default function AIAssistant() {
 
   return (
     <>
-     <h2 className="assistant-title">Feedback & Suggestions</h2>
      <div className="ai-assistant">
         <div className="ai-header">
             <img 

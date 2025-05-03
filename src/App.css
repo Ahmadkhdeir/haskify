@@ -9,27 +9,28 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
-.editor-ai-container {
-  display: flex;
+.code-ai-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
   gap: 1rem;
-  margin-top: 1rem;
-  flex: 1;
-  min-height: 0;
-  padding: 0 2rem; 
+  width: 100%; 
+  min-height: 70vh; 
 }
 
-.editor-column {
-  width: 48%; 
+.code-ai-grid > * {
+  min-width: 0; 
   display: flex;
   flex-direction: column;
-  min-height: 0;
 }
 
-.ai-column {
-  width: 48%; 
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+.shared-title {
+  font-family: 'Jura', sans-serif;
+  color: #333;
+  font-size: 2rem; 
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+  text-align: center; 
 }
