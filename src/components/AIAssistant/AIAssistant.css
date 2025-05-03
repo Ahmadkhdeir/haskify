@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     padding-right: 1rem;
-    background: linear-gradient(135deg, #abaffc58, #ffffff62);
+    background: linear-gradient(135deg, #004cff21, #ffffff62);
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid #00000065;
@@ -47,10 +47,6 @@
     content: '';
     display: block;
     height: 1px;
-  }
-
-  .message {
-    margin-bottom: 1.5rem;
   }
   
   .message-sender {

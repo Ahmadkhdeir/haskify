@@ -51,7 +51,7 @@ export default function AIAssistant() {
 
       <div className="chat-container">
         {messages.map((message, index) => (
-          <div key={index} className="message">
+          <div key={index}>
             <div className="message-sender">
               {message.sender === 'OUR AI' && <img src={whiteStars} alt="AI Logo" className="ai-logo" />}
               {message.sender}

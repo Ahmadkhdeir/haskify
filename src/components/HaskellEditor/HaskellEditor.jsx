@@ -33,7 +33,7 @@ export default function HaskellEditor() {
       </div>
 
       <div className="output-section">
-        <h3>Output</h3>
+        <h3 className='output-title'>Output</h3>
         <pre>{output}</pre>
       </div>
     </div>
