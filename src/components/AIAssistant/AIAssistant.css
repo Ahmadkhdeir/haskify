@@ -6,6 +6,7 @@
     background: linear-gradient(135deg, #ffffff62, #5b006547);
     border-radius: 8px;
     overflow: hidden;
+    border: 1px solid #ddd;
   }
   
   .ai-header {

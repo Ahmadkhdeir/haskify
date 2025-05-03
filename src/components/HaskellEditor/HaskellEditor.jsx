@@ -23,6 +23,11 @@ export default function HaskellEditor() {
             wordWrap: 'on',
             lineNumbers: 'on',
             scrollBeyondLastLine: false,
+            padding: {
+              top: 10 
+            },
+            renderLineHighlight: 'none',
+            lineDecorationsWidth: 10, 
           }}
         />
       </div>
