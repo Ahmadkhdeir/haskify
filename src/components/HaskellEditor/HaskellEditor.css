@@ -20,7 +20,28 @@
   color: #d4d4d4;
   position: relative;
   min-height: 18%;
+  max-height: 10vh;
+  overflow: hidden; 
+  display: flex;
+  flex-direction: column;
+}
 
+.output-section pre {
+  margin: 0;
+  padding: 0.5rem 0;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  max-height: 100%; 
+}
+
+.output-section pre::-webkit-scrollbar {
+  width: 6px;
+}
+.output-section pre::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 3px;
 }
 
 .output-title {
@@ -29,10 +50,11 @@
   font-weight: lighter;
   display: inline-block; 
   padding-bottom: 2px; 
-  border-bottom: 1px solid #d4d4d4; 
   margin-top: 2px; 
   margin-bottom: 0px; 
   margin-left: 2px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .editor-title {

@@ -28,6 +28,9 @@ export default function HaskellEditor() {
             },
             renderLineHighlight: 'none',
             lineDecorationsWidth: 10, 
+            glyphMargin: false,
+            lineNumbersMinChars: 3,
+            folding: false,
           }}
         />
       </div>
