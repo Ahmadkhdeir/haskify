@@ -5,16 +5,12 @@
     flex-direction: column;
     min-height: 0; 
     padding-right: 1rem;
-    background: 
-    linear-gradient(to right, 
-      #89BCFF 0%, 
-      #89BCFF 40%, 
-      #FF86E1 60%, 
-      #FF86E1 100%);
+    background: linear-gradient(135deg, #84b9ff40, #f82a6b40);
     border-radius: 8px;
   }
   
   .ai-header {
+    margin-top: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
