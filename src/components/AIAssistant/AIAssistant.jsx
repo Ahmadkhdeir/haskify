@@ -67,12 +67,16 @@ export default function AIAssistant() {
       </div>
 
       <div className="input-container">
-        <input
-          type="text"
+        <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask me anything about your projects"
-          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
         />
         <img 
           src={arrowIcon}
