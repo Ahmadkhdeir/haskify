@@ -1,6 +1,6 @@
 # Haskify
 
-![Haskify Demo](/Users/ahmad/Desktop/Haskify/Assets/demo-haskify.gif)
+![Haskify Demo](https://github.com/Ahmadkhdeir/haskify/blob/main/demo-haskify.gif?raw=true)
 
 A simple web app for learning Haskell with a code editor and AI assistant.
 
