@@ -1,7 +1,7 @@
 # Haskify
 
 <div align="center">
-  <img src="https://github.com/Ahmadkhdeir/haskify/blob/main/demo-haskify.gif?raw=true" width="1000"/>
+  <img src="/Users/ahmad/Desktop/Haskify/demo-haskify2.gif" width="600"/>
 </div>
 
 A simple web app for learning Haskell with a code editor and AI assistant.
