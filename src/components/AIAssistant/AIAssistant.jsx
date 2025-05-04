@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './AIAssistant.css';
 import blackStars from '../../assets/blackStars.png'; 
-import whiteStars from '../../assets/whiteStars.png'; 
+// import whiteStars from '../../assets/whiteStars.png'; 
 import arrowIcon from '../../assets/arrow.png';
 
 export default function AIAssistant() {
@@ -53,7 +53,7 @@ export default function AIAssistant() {
         {messages.map((message, index) => (
           <div key={index}>
             <div className="message-sender">
-              {message.sender === 'OUR AI' && <img src={whiteStars} alt="AI Logo" className="ai-logo" />}
+              {message.sender === 'OUR AI' && <img src={blackStars} alt="AI Logo" className="ai-logo-chat" />}
               {message.sender}
             </div>
             <div className="message-text">
