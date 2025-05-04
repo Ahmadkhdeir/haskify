@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import Editor from '@monaco-editor/react';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-haskell';
+import 'ace-builds/src-noconflict/theme-chrome';
 import './HaskellEditor.css';
 
 export default function HaskellEditor() {
@@ -7,39 +9,32 @@ export default function HaskellEditor() {
   const [output] = useState("> Output will appear here");
 
   return (
-    <>
     <div className="editor-container">
       <div className="editor-section">
-        
-        <Editor
-          height="100%"
-          language="haskell"
-          theme="vs-dark"
+        <AceEditor
+          mode="haskell"
+          theme="chrome"
           value={code}
           onChange={setCode}
-          options={{
-            minimap: { enabled: false },
-            fontSize: 14,
-            wordWrap: 'on',
-            lineNumbers: 'on',
-            scrollBeyondLastLine: false,
-            padding: {
-              top: 20 
-            },
-            renderLineHighlight: 'none',
-            lineDecorationsWidth: 10, 
-            glyphMargin: false,
-            lineNumbersMinChars: 3,
-            folding: false,
+          fontSize={14}
+          width="100%"
+          height="100%"
+          showPrintMargin={false}
+          showGutter={true}
+          highlightActiveLine={true}
+          setOptions={{
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+            showLineNumbers: true,
+            tabSize: 2,
           }}
         />
       </div>
 
       <div className="output-section">
-        <h3 className='output-title'>Output</h3>
+        <h3 className="output-title">Output</h3>
         <pre>{output}</pre>
       </div>
     </div>
-    </>
   );
 }

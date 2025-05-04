@@ -23,8 +23,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  width: 90%; 
-  min-height: 75vh;
+  width: 100%; 
+  min-height: 78vh;
   padding: 0 1rem; 
 }
 
