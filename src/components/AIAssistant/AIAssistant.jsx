@@ -22,25 +22,27 @@ export default function AIAssistant() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
-    if (input.trim()) {
-      const lastMessage = messages[messages.length - 1];
-      
-      if (lastMessage?.sender === 'ME') {
-        setMessages([
-          ...messages.slice(0, -1),
-          {
-            ...lastMessage,
-            text: `${lastMessage.text}\n${input}`
-          }
-        ]);
-      } else {
-        setMessages([...messages, { sender: 'ME', text: input }]);
-      }
-      
-      setInput('');
-    }
-  };
+    const handleSend = async () => {
+        if (input.trim()) {
+        try {
+            const response = await fetch('http://localhost:5000/ai/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: input }),
+            });
+            const data = await response.json();
+    
+            setMessages([
+            ...messages,
+            { sender: 'ME', text: input },
+            { sender: 'OUR AI', text: data.response },
+            ]);
+            setInput('');
+        } catch (error) {
+            console.error("Fehler beim Senden:", error);
+        }
+        }
+    };
 
   return (
     <div className="ai-assistant">
