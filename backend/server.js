@@ -1,18 +1,19 @@
 import express from 'express';
 import cors from 'cors';
-const app = express();
-const PORT = 5000;
 
-app.use(cors()); 
-app.use(express.json()); 
+const app = express();
+const PORT = 5001;
+
+app.use(cors({
+  origin: 'http://localhost:5173',  
+  methods: ['POST', 'GET']         
+}));
+
+app.use(express.json());
 
 app.post('/ai/ask', (req, res) => {
-  const userQuery = req.body.query;
-  console.log("User fragt:", userQuery);
-
-  const aiResponse = `Antwort auf: "${userQuery}" (Mock)`;
-
-  res.json({ response: aiResponse });
+  console.log("Empfangene Anfrage:", req.body.query);
+  res.json({ response: `Antwort auf: "${req.body.query}"` });
 });
 
 app.listen(PORT, () => {

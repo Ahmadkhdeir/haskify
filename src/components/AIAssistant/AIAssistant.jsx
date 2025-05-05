@@ -22,27 +22,32 @@ export default function AIAssistant() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-    const handleSend = async () => {
-        if (input.trim()) {
-        try {
-            const response = await fetch('http://localhost:5000/ai/ask', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: input }),
-            });
-            const data = await response.json();
-    
-            setMessages([
-            ...messages,
-            { sender: 'ME', text: input },
-            { sender: 'OUR AI', text: data.response },
-            ]);
-            setInput('');
-        } catch (error) {
-            console.error("Fehler beim Senden:", error);
-        }
-        }
-    };
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSend = async () => {
+    if (input.trim() && !isLoading) {
+      setIsLoading(true);
+      const userMessage = { sender: 'ME', text: input };
+      setMessages(prev => [...prev, userMessage]);
+      setInput('');
+      await sendToBackend(input);
+      setIsLoading(false);
+    }
+  };
+
+  const sendToBackend = async (query) => {
+    try {
+      const response = await fetch('http://localhost:5001/ai/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      });
+      const data = await response.json();
+      setMessages(prev => [...prev, { sender: 'OUR AI', text: data.response }]);
+    } catch {
+      setMessages(prev => [...prev, { sender: 'OUR AI', text: "⚠️ Backend-Fehler. Bitte versuche es später." }]);
+    }
+  };
 
   return (
     <div className="ai-assistant">
