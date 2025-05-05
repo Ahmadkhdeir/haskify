@@ -1,35 +1,66 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './AIAssistant.css';
-import blackStars from '../../assets/blackStars.png'; 
-// import whiteStars from '../../assets/whiteStars.png'; 
+import blackStars from '../../assets/blackStars.png';
 import arrowIcon from '../../assets/arrow.png';
 
 export default function AIAssistant() {
-  const [messages, setMessages] = useState([
-    {
-      sender: 'ME',
-      text: 'please correct my code'
-    },
-    {
-      sender: 'OUR AI',
-      text: `1. LINE 9: USE N \\MOD 2 == 0 INSTEAD OF N \\MOD 2 = TRUE'.\n2. LINE 16: REPLACE FACTORIAL NUMBER WITH FACTORIAL (TOINTEGER NUMBER).\n3. LINE 17: REPLACE "FACTORIAL: " ++ FACTORIAL NUMBER WITH "FACTORIAL: " ++ SHOW (FACTORIAL (TOINTEGER NUMBER)).`
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
-  
+  const typingIntervalRef = useRef(null);
+
+  useEffect(() => {
+    const initialMessage = "Hi! How can I help you with your Haskell project today?";
+    let currentIndex = 0;
+    
+    setIsTyping(true);
+    setMessages([{ sender: 'OUR AI', text: '', isTyping: true }]);
+    
+    typingIntervalRef.current = setInterval(() => {
+      if (currentIndex < initialMessage.length) {
+        setMessages(prev => [
+          { 
+            sender: 'OUR AI', 
+            text: initialMessage.substring(0, currentIndex + 1),
+            isTyping: true 
+          }
+        ]);
+        currentIndex++;
+      } else {
+        clearInterval(typingIntervalRef.current);
+        setMessages(prev => [
+          { 
+            sender: 'OUR AI', 
+            text: initialMessage,
+            isTyping: false 
+          }
+        ]);
+        setIsTyping(false);
+      }
+    }, 30);
+
+    return () => clearInterval(typingIntervalRef.current);
+  }, []);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleSend = async () => {
-    if (input.trim() && !isLoading) {
+    if (input.trim() && !isLoading && !isTyping) {
       setIsLoading(true);
       const userMessage = { sender: 'ME', text: input };
       setMessages(prev => [...prev, userMessage]);
       setInput('');
+      
+      setMessages(prev => [...prev, { 
+        sender: 'OUR AI', 
+        text: '', 
+        isLoading: true 
+      }]);
+      
       await sendToBackend(input);
       setIsLoading(false);
     }
@@ -43,9 +74,60 @@ export default function AIAssistant() {
         body: JSON.stringify({ query }),
       });
       const data = await response.json();
-      setMessages(prev => [...prev, { sender: 'OUR AI', text: data.response }]);
+      
+      setMessages(prev => prev.filter(msg => !msg.isLoading));
+      
+      setIsTyping(true);
+      let currentIndex = 0;
+      const responseText = data.response;
+      
+      setMessages(prev => [...prev, { 
+        sender: 'OUR AI', 
+        text: '', 
+        isTyping: true 
+      }]);
+      
+      typingIntervalRef.current = setInterval(() => {
+        if (currentIndex < responseText.length) {
+          setMessages(prev => {
+            const base = prev.slice(0, -1);
+            return [
+              ...base,
+              { 
+                sender: 'OUR AI', 
+                text: responseText.substring(0, currentIndex + 1),
+                isTyping: true 
+              }
+            ];
+          });
+          currentIndex++;
+        } else {
+          clearInterval(typingIntervalRef.current);
+          setMessages(prev => {
+            const base = prev.slice(0, -1);
+            return [
+              ...base,
+              { 
+                sender: 'OUR AI', 
+                text: responseText,
+                isTyping: false 
+              }
+            ];
+          });
+          setIsTyping(false);
+        }
+      }, 30);
     } catch {
-      setMessages(prev => [...prev, { sender: 'OUR AI', text: "⚠️ Backend-Fehler. Bitte versuche es später." }]);
+      setMessages(prev => {
+        const filtered = prev.filter(msg => !msg.isLoading);
+        return [...filtered, { 
+          sender: 'OUR AI', 
+          text: "⚠️ Error connecting to AI. Please try again later.",
+          isTyping: false
+        }];
+      });
+      setIsLoading(false);
+      setIsTyping(false);
     }
   };
 
@@ -60,17 +142,26 @@ export default function AIAssistant() {
         {messages.map((message, index) => (
           <div key={index}>
             <div className="message-sender">
-              {message.sender === 'OUR AI' && <img src={blackStars} alt="AI Logo" className="ai-logo-chat" />}
-              {message.sender}
+              {message.sender === 'OUR AI' && (
+                <>
+                  <img src={blackStars} alt="AI Logo" className="ai-logo-chat"/>
+                  {message.sender}
+                  {message.isLoading && <span className="loading-indicator"></span>}
+                </>
+              )}
+              {message.sender === 'ME' && message.sender}
             </div>
             <div className="message-text">
               {message.text.split('\n').map((line, i) => (
                 <div key={i}>{line}</div>
               ))}
+              {message.isTyping && !message.isLoading && (
+                <span className="typing-cursor">|</span>
+              )}
             </div>
           </div>
         ))}
-        <div ref={messagesEndRef} /> 
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="input-container">
@@ -84,12 +175,17 @@ export default function AIAssistant() {
               handleSend();
             }
           }}
+          disabled={isLoading || isTyping}
         />
         <img 
           src={arrowIcon}
           alt="Send"
           className="send-icon"
           onClick={handleSend}
+          style={{ 
+            opacity: (isLoading || isTyping) ? 0.5 : 1,
+            cursor: (isLoading || isTyping) ? 'not-allowed' : 'pointer' 
+          }}
         />
       </div>
     </div>
