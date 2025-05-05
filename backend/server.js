@@ -17,15 +17,16 @@ app.use(cors({
 app.use(express.json());
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+    apiKey: process.env.OPENAI_API_KEY,
+    baseURL: "https://api.deepseek.com/v1",  
+  });
 
 app.post('/ai/ask', async (req, res) => {
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: req.body.query }],
-    });
+        model: "deepseek-chat",  
+        messages: [{ role: "user", content: req.body.query }],
+      });
     res.json({ response: completion.choices[0].message.content });
   } catch (error) {
     console.error("OpenAI-Fehler:", error);
