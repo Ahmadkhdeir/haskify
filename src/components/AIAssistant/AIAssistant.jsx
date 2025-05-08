@@ -41,7 +41,7 @@ export default function AIAssistant() {
         ]);
         setIsTyping(false);
       }
-    }, 30);
+    }, 15);
 
     return () => clearInterval(typingIntervalRef.current);
   }, []);
@@ -123,7 +123,7 @@ export default function AIAssistant() {
           });
           setIsTyping(false);
         }
-      }, 30);
+      }, 15);
     } catch (error) {
       console.error('Error:', error);
       setMessages(prev => {
