@@ -149,3 +149,29 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
   }
+
+
+  /* Code block styling */
+.code-block {
+  background: #282c34;
+  color: #abb2bf;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.code-language {
+  color: #7f848e;
+  font-size: 12px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.code-content {
+  margin: 0;
+  white-space: pre-wrap;
+}

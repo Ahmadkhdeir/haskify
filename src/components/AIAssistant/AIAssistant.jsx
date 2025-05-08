@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './AIAssistant.css';
 import blackStars from '../../assets/blackStars.png';
 import arrowIcon from '../../assets/arrow.png';
@@ -73,6 +73,11 @@ export default function AIAssistant() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query }),
       });
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       const data = await response.json();
       
       setMessages(prev => prev.filter(msg => !msg.isLoading));
@@ -117,7 +122,8 @@ export default function AIAssistant() {
           setIsTyping(false);
         }
       }, 30);
-    } catch {
+    } catch (error) {
+      console.error('Error:', error);
       setMessages(prev => {
         const filtered = prev.filter(msg => !msg.isLoading);
         return [...filtered, { 
@@ -131,6 +137,32 @@ export default function AIAssistant() {
     }
   };
 
+  const formatMessage = (text) => {
+    // Split by code blocks (```lang ... ```)
+    const parts = text.split(/(```[\s\S]*?```)/g);
+    
+    return parts.map((part, i) => {
+      if (part.startsWith('```') && part.endsWith('```')) {
+        const code = part.replace(/```(\w+)?\n?|\n?```/g, '');
+        const language = part.match(/```(\w+)/)?.[1] || '';
+        
+        return (
+          <div key={i} className="code-block">
+            {language && <div className="code-language">{language}</div>}
+            <pre className="code-content">{code}</pre>
+          </div>
+        );
+      }
+      return (
+        <div key={i}>
+          {part.split('\n').map((line, j) => (
+            <div key={j}>{line}</div>
+          ))}
+        </div>
+      );
+    });
+  };
+  
   return (
     <div className="ai-assistant">
       <div className="ai-header">
@@ -152,9 +184,7 @@ export default function AIAssistant() {
               {message.sender === 'ME' && message.sender}
             </div>
             <div className="message-text">
-              {message.text.split('\n').map((line, i) => (
-                <div key={i}>{line}</div>
-              ))}
+              {formatMessage(message.text)}
               {message.isTyping && !message.isLoading && (
                 <span className="typing-cursor">|</span>
               )}

@@ -21,18 +21,30 @@ const openai = new OpenAI({
     baseURL: "https://api.deepseek.com/v1",  
   });
 
-app.post('/ai/ask', async (req, res) => {
-  try {
-    const completion = await openai.chat.completions.create({
-        model: "deepseek-chat",  
+  app.post('/ai/ask', async (req, res) => {
+    try {
+      const stream = await openai.chat.completions.create({
+        model: "deepseek-chat",
         messages: [{ role: "user", content: req.body.query }],
+        stream: true,
       });
-    res.json({ response: completion.choices[0].message.content });
-  } catch (error) {
-    console.error("OpenAI-Fehler:", error);
-    res.status(500).json({ error: "AI konnte nicht antworten" });
-  }
-});
+  
+      res.setHeader('Content-Type', 'text/plain'); 
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+  
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content || '';
+        res.write(content); 
+        if (typeof res.flush === 'function') res.flush();
+      }
+  
+      res.end();
+    } catch (error) {
+      console.error("OpenAI Error:", error);
+      res.status(500).send("⚠️ AI couldn't respond");
+    }
+  });
 
 app.listen(PORT, () => {
   console.log(`Backend läuft auf http://localhost:${PORT}`);
