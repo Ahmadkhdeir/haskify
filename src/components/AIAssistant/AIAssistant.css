@@ -150,28 +150,22 @@
     50% { opacity: 0; }
   }
 
-
-  /* Code block styling */
-.code-block {
-  background: #282c34;
-  color: #abb2bf;
-  border-radius: 6px;
-  padding: 12px;
-  margin: 8px 0;
-  overflow-x: auto;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  line-height: 1.5;
+.react-syntax-highlighter {
+  font-size: 0.8em !important;
+  line-height: 1.4 !important;
+  padding: 10px !important;
+  margin: 8px 0 !important;
+  max-height: 250px !important;
+  overflow: auto !important;
+  border-radius: 6px !important;
 }
 
-.code-language {
-  color: #7f848e;
-  font-size: 12px;
-  margin-bottom: 8px;
-  text-transform: uppercase;
+.react-syntax-highlighter::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
 }
 
-.code-content {
-  margin: 0;
-  white-space: pre-wrap;
+.react-syntax-highlighter::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
 }

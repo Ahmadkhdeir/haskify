@@ -1,5 +1,5 @@
 :root {
-  --content-max-width: 1400px; 
+  --content-max-width: 1500px; 
 }
 
 .app-layout {
@@ -23,7 +23,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  width: 90%; 
+  width: 100%; 
   min-height: 75vh;
   padding: 0 1rem; 
 }

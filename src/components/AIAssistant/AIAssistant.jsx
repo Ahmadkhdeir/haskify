@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import './AIAssistant.css';
 import blackStars from '../../assets/blackStars.png';
 import arrowIcon from '../../assets/arrow.png';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default function AIAssistant() {
   const [messages, setMessages] = useState([]);
@@ -138,19 +140,32 @@ export default function AIAssistant() {
   };
 
   const formatMessage = (text) => {
-    // Split by code blocks (```lang ... ```)
     const parts = text.split(/(```[\s\S]*?```)/g);
     
     return parts.map((part, i) => {
       if (part.startsWith('```') && part.endsWith('```')) {
-        const code = part.replace(/```(\w+)?\n?|\n?```/g, '');
-        const language = part.match(/```(\w+)/)?.[1] || '';
+        const code = part.replace(/```(\w+)?\n?|\n?```/g, '').trim();
+        const language = part.match(/```(\w+)/)?.[1] || 'text';
         
         return (
-          <div key={i} className="code-block">
-            {language && <div className="code-language">{language}</div>}
-            <pre className="code-content">{code}</pre>
-          </div>
+          <SyntaxHighlighter
+            key={i}
+            language={language}
+            style={tomorrow}
+            customStyle={{
+              background: '#282c34',
+              borderRadius: '6px',
+              padding: '12px',
+              margin: '8px 0',
+              fontSize: '0.8em', 
+              maxHeight: '300px', 
+              overflow: 'auto' 
+            }}
+            showLineNumbers={false}
+            wrapLines={true}
+          >
+            {code}
+          </SyntaxHighlighter>
         );
       }
       return (
