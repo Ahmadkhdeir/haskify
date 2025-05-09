@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import './HaskellEditor.css';
 import runButtonIcon from '/Users/ahmad/Desktop/Haskify/src/assets/run.png';
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import haskellMonarch from '../../monaco-haskell'; 
 
 function handleEditorWillMount(monaco) {

@@ -16,6 +16,10 @@ const haskellMonarch = {
     // Tokenizer rules
     tokenizer: {
       root: [
+        // Comments 
+        [/--.*$/, 'comment'],
+        [/{-/, 'comment', '@comment'],
+        
         // Modules and imports
         [/(module)(\s+)([A-Z][\w']*)/, ['keyword', 'white', 'namespace']],
         [/(import)(\s+)(qualified)?/, ['keyword', 'white', 'keyword']],
@@ -38,13 +42,21 @@ const haskellMonarch = {
         [/"/, 'string', '@string'],
         [/'/, 'string.char', '@char'],
         
-        // Comments (put these before identifiers)
-        [/--.*$/, 'comment'],
-        [/{-/, 'comment', '@comment'],
+        // Types
+        [/[A-Z][\w']*/, {
+          cases: {
+            '@typeKeywords': 'type',
+            '@default': 'type.identifier'
+          }
+        }],
         
         // Identifiers
-        [/[A-Z][\w']*/, 'type.identifier'],
-        [/[a-z_][\w']*/, 'identifier'],
+        [/[a-z_][\w']*/, {
+          cases: {
+            '@keywords': 'keyword',
+            '@default': 'identifier'
+          }
+        }],
         
         // Whitespace
         { include: '@whitespace' }
@@ -58,9 +70,10 @@ const haskellMonarch = {
             ],
   
       comment: [
-        [/[^-{}]+/, 'comment'],
+        [/[^{-]+/, 'comment'],
+        [/{-/, 'comment', '@comment'],
         [/-}/, 'comment', '@pop'],
-        [/./, 'comment']
+        [/[{-]/, 'comment']
       ],
   
       string: [
