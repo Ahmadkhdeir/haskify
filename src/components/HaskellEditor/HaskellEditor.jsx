@@ -1,43 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
-import { loadPyodide } from 'pyodide';
 import './HaskellEditor.css';
-import runButtonIcon from '/Users/ahmad/Desktop/Haskify/src/assets/run.png'; 
+import runButtonIcon from '/Users/ahmad/Desktop/Haskify/src/assets/run.png';
 
 export default function HaskellEditor() {
-  const [code, setCode] = useState(`# Your Python code here\nprint("Hello World")`);
-  const [output, setOutput] = useState("> Loading Python runtime...");
+  const [code, setCode] = useState(
+`-- Your Haskell code here
+main :: IO ()
+main = putStrLn "Hello, Haskell!"
+`
+  );
+  const [output, setOutput] = useState("> Ready to run Haskell code");
   const [isRunning, setIsRunning] = useState(false);
-  const [pyodide, setPyodide] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
 
-  // Initialize Pyodide when component mounts
   useEffect(() => {
-    loadPyodide({
-      indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
-    }).then((py) => {
-      setPyodide(py);
-      setOutput("> Ready to run Python code");
-    });
+    fetch('http://localhost:5001/health')
+      .then(() => setIsConnected(true))
+      .catch(() => {
+        setIsConnected(false);
+        setOutput("> Error: Backend server not connected");
+      });
   }, []);
 
   const handleRunCode = async () => {
-    if (!pyodide) {
-      setOutput("> Python runtime not loaded yet");
+    if (!isConnected) {
+      setOutput("> Error: Cannot connect to execution server");
       return;
     }
-    
+
     setIsRunning(true);
-    setOutput("> Running Python code...");
-    
+    setOutput("> Running Haskell code...");
+
     try {
-      // Capture all print output
-      let consoleOutput = "";
-      pyodide.setStdout({ batched: (text) => consoleOutput += text });
-      
-      await pyodide.runPythonAsync(code);
-      setOutput(consoleOutput || "> Code executed (no output)");
+      const response = await fetch('http://localhost:5001/run-haskell', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code })
+      });
+
+      if (!response.ok) throw new Error("Execution failed");
+
+      const result = await response.json();
+      setOutput(result.output || "> Program executed (no output)");
     } catch (error) {
-      setOutput(`> Error: ${error.message}`);
+      setOutput(`> Error: ${error.message || "Failed to execute code"}`);
     } finally {
       setIsRunning(false);
     }
@@ -48,10 +55,10 @@ export default function HaskellEditor() {
       <div className="editor-section">
         <Editor
           height="100%"
-          language="python"
+          language="haskell"
           theme="vs-dark"
           value={code}
-          onChange={setCode}
+          onChange={(value) => setCode(value || '')}
           options={{
             minimap: { enabled: false },
             fontSize: 14,
@@ -64,6 +71,9 @@ export default function HaskellEditor() {
             glyphMargin: false,
             lineNumbersMinChars: 3,
             folding: false,
+            autoClosingBrackets: 'always',
+            formatOnType: true,
+            suggestOnTriggerCharacters: true
           }}
         />
       </div>
@@ -71,16 +81,20 @@ export default function HaskellEditor() {
       <div className="output-section">
         <div className="output-header">
           <h3 className='output-title'>Output</h3>
-          <button 
-            className="run-button"
-            onClick={handleRunCode}
-            disabled={isRunning || !pyodide}
-          >
-            <img src={runButtonIcon} alt="Run" />
-            {isRunning ? 'Running...' : 'Run'}
-          </button>
+          <div className="status-indicator">
+            <button 
+              className="run-button"
+              onClick={handleRunCode}
+              disabled={isRunning || !isConnected}
+            >
+              <img src={runButtonIcon} alt="Run" />
+              {isRunning ? 'Running...' : 'Run'}
+            </button>
+          </div>
         </div>
-        <pre>{output}</pre>
+        <pre className="output-content">
+          {output}
+        </pre>
       </div>
     </div>
   );

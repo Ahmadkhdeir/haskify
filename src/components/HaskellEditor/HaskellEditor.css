@@ -10,7 +10,7 @@
 
 .editor-section {
   flex: 3;
-  min-height: 82%;
+  min-height: 70%;
 }
 
 .output-section {
@@ -19,7 +19,7 @@
   background: #252526;
   color: #d4d4d4;
   position: relative;
-  min-height: 18%;
+  min-height: 30%;
   max-height: 10vh;
   overflow: hidden; 
   display: flex;
@@ -91,4 +91,13 @@
 .run-button img {
   height: 14px;
   width: 14px;
+}
+
+.output-content {
+  white-space: pre-wrap;
+  font-family: monospace;
+  padding: 12px;
+  border-radius: 4px;
+  max-height: 300px;
+  overflow-y: auto;
 }
