@@ -2,6 +2,39 @@ import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import './HaskellEditor.css';
 import runButtonIcon from '/Users/ahmad/Desktop/Haskify/src/assets/run.png';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import haskellMonarch from '../../monaco-haskell'; 
+
+function handleEditorWillMount(monaco) {
+  monaco.languages.register({ id: 'haskell' });
+  monaco.languages.setMonarchTokensProvider('haskell', haskellMonarch);
+  monaco.languages.setLanguageConfiguration('haskell', {
+    comments: {
+      lineComment: '--',
+      blockComment: ['{-', '-}'],
+    },
+    brackets: [
+      ['{', '}'],
+      ['[', ']'],
+      ['(', ')'],
+    ],
+    autoClosingPairs: [
+      { open: '{', close: '}' },
+      { open: '[', close: ']' },
+      { open: '(', close: ')' },
+      { open: '"', close: '"' },
+      { open: "'", close: "'" },
+    ],
+    surroundingPairs: [
+      { open: '{', close: '}' },
+      { open: '[', close: ']' },
+      { open: '(', close: ')' },
+      { open: '"', close: '"' },
+      { open: "'", close: "'" },
+    ],
+  });
+}
+
 
 export default function HaskellEditor() {
   const [code, setCode] = useState(
@@ -59,6 +92,7 @@ main = putStrLn "Hello, Haskell!"
           theme="vs-dark"
           value={code}
           onChange={(value) => setCode(value || '')}
+          beforeMount={handleEditorWillMount}
           options={{
             minimap: { enabled: false },
             fontSize: 14,
