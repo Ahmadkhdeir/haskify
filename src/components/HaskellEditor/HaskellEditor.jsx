@@ -71,10 +71,20 @@ main = putStrLn "Hello, Haskell!"
         body: JSON.stringify({ code })
       });
 
-      if (!response.ok) throw new Error("Execution failed");
+      let result;
+      try {
+        result = await response.json();
+      } catch (e) {
+        setOutput("> Error: Could not parse error output");
+        setIsRunning(false);
+        return;
+      }
 
-      const result = await response.json();
-      setOutput(result.output || "> Program executed (no output)");
+      if (!response.ok) {
+        setOutput(result.output || `> Error: Execution failed!`);
+      } else {
+        setOutput(result.output || "> Program executed (no output)");
+      }
     } catch (error) {
       setOutput(`> Error: ${error.message || "Failed to execute code"}`);
     } finally {
