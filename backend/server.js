@@ -35,7 +35,6 @@ app.post('/ai/ask', async (req, res) => {
   try {
     const { query, code, output } = req.body;
     
-    // Create a system message that includes context about the code
     const systemMessage = `You are a Haskell programming assistant. 
     The user's current code is:
     \`\`\`haskell
