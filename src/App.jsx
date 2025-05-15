@@ -9,12 +9,22 @@ import AIAssistant from './Components/AIAssistant/AIAssistant';
 
 function App() {
   const [pdfData, setPdfData] = useState({ url: null, name: null });
+  const [sharedState, setSharedState] = useState({
+    code: `-- Your Haskell code here
+main :: IO ()
+main = putStrLn "Hello, Haskell!"`,
+    output: "> Ready to run Haskell code"
+  });
 
   const handlePdfUpload = (url, name) => {
     if (pdfData.url) {
       URL.revokeObjectURL(pdfData.url);
     }
     setPdfData({ url, name });
+  };
+
+  const updateSharedState = (newState) => {
+    setSharedState(prev => ({ ...prev, ...newState }));
   };
 
   return (
@@ -27,14 +37,18 @@ function App() {
         <div className="code-ai-grid">
           <div className='grid-item'>
             <h2 className="shared-title">Code Editor</h2>
-            <HaskellEditor />
+            <HaskellEditor 
+              sharedState={sharedState}
+              updateSharedState={updateSharedState}
+            />
           </div>
           
           <div className='grid-item'>
             <h2 className="shared-title">AI Assistant</h2>
-            <AIAssistant />
+            <AIAssistant 
+              sharedState={sharedState}
+            />
           </div>
-          
         </div>
       </main>
       <Footer />

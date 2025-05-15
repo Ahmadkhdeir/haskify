@@ -34,15 +34,7 @@ function handleEditorWillMount(monaco) {
   });
 }
 
-
-export default function HaskellEditor() {
-  const [code, setCode] = useState(
-`-- Your Haskell code here
-main :: IO ()
-main = putStrLn "Hello, Haskell!"
-`
-  );
-  const [output, setOutput] = useState("> Ready to run Haskell code");
+export default function HaskellEditor({ sharedState, updateSharedState }) {
   const [isRunning, setIsRunning] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -51,42 +43,42 @@ main = putStrLn "Hello, Haskell!"
       .then(() => setIsConnected(true))
       .catch(() => {
         setIsConnected(false);
-        setOutput("> Error: Backend server not connected");
+        updateSharedState({ output: "> Error: Backend server not connected" });
       });
   }, []);
 
   const handleRunCode = async () => {
     if (!isConnected) {
-      setOutput("> Error: Cannot connect to execution server");
+      updateSharedState({ output: "> Error: Cannot connect to execution server" });
       return;
     }
 
     setIsRunning(true);
-    setOutput("> Running Haskell code...");
+    updateSharedState({ output: "> Running Haskell code..." });
 
     try {
       const response = await fetch('http://localhost:5001/run-haskell', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code })
+        body: JSON.stringify({ code: sharedState.code })
       });
 
       let result;
       try {
         result = await response.json();
       } catch (e) {
-        setOutput("> Error: Could not parse error output");
+        updateSharedState({ output: "> Error: Could not parse error output" });
         setIsRunning(false);
         return;
       }
 
       if (!response.ok) {
-        setOutput(result.output || `> Error: Execution failed!`);
+        updateSharedState({ output: result.output || `> Error: Execution failed!` });
       } else {
-        setOutput(result.output || "> Program executed (no output)");
+        updateSharedState({ output: result.output || "> Program executed (no output)" });
       }
     } catch (error) {
-      setOutput(`> Error: ${error.message || "Failed to execute code"}`);
+      updateSharedState({ output: `> Error: ${error.message || "Failed to execute code"}` });
     } finally {
       setIsRunning(false);
     }
@@ -99,8 +91,8 @@ main = putStrLn "Hello, Haskell!"
           height="100%"
           language="haskell"
           theme="vs-dark"
-          value={code}
-          onChange={(value) => setCode(value || '')}
+          value={sharedState.code}
+          onChange={(value) => updateSharedState({ code: value || '' })}
           beforeMount={handleEditorWillMount}
           options={{
             minimap: { enabled: false },
@@ -136,7 +128,7 @@ main = putStrLn "Hello, Haskell!"
           </div>
         </div>
         <pre className="output-content">
-          {output}
+          {sharedState.output}
         </pre>
       </div>
     </div>

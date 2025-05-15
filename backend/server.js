@@ -33,9 +33,30 @@ const openai = new OpenAI({
 
 app.post('/ai/ask', async (req, res) => {
   try {
+    const { query, code, output } = req.body;
+    
+    // Create a system message that includes context about the code
+    const systemMessage = `You are a Haskell programming assistant. 
+    The user's current code is:
+    \`\`\`haskell
+    ${code}
+    \`\`\`
+    ${output ? `The last execution output was:
+    \`\`\`
+    ${output}
+    \`\`\`` : ''}
+    
+    Provide helpful, accurate responses about Haskell programming. 
+    If the user asks about their code, analyze it and suggest improvements.
+    If there are errors, explain them clearly.
+    Always format code blocks with proper syntax highlighting.`;
+
     const stream = await openai.chat.completions.create({
       model: "deepseek-chat",
-      messages: [{ role: "user", content: req.body.query }],
+      messages: [
+        { role: "system", content: systemMessage },
+        { role: "user", content: query }
+      ],
       stream: true,
     });
 

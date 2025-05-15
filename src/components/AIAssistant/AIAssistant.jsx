@@ -5,7 +5,7 @@ import arrowIcon from '../../assets/arrow.png';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-export default function AIAssistant() {
+export default function AIAssistant({ sharedState }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +73,11 @@ export default function AIAssistant() {
       const response = await fetch('http://localhost:5001/ai/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ 
+          query,
+          code: sharedState.code,
+          output: sharedState.output
+        }),
       });
       
       if (!response.ok) {
