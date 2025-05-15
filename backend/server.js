@@ -45,6 +45,13 @@ app.post('/ai/ask', async (req, res) => {
     ${output}
     \`\`\`` : ''}
     
+    When suggesting code changes:
+    1. Always include the complete code with all comments
+    2. Keep the same structure and formatting
+    3. Only fix the specific issues mentioned
+    4. Preserve any existing comments and documentation
+    5. Format your response with proper code blocks
+    
     Provide helpful, accurate responses about Haskell programming. 
     If the user asks about their code, analyze it and suggest improvements.
     If there are errors, explain them clearly.

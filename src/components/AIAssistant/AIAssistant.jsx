@@ -5,7 +5,7 @@ import arrowIcon from '../../assets/arrow.png';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-export default function AIAssistant({ sharedState }) {
+export default function AIAssistant({ sharedState, updateSharedState }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -143,6 +143,13 @@ export default function AIAssistant({ sharedState }) {
     }
   };
 
+  const applyCodeChange = (newCode) => {
+    updateSharedState({ 
+      code: newCode,
+      changedLines: [] 
+    });
+  };
+
   const formatMessage = (text) => {
     const parts = text.split(/(```[\s\S]*?```)/g);
     
@@ -152,24 +159,33 @@ export default function AIAssistant({ sharedState }) {
         const language = part.match(/```(\w+)/)?.[1] || 'text';
         
         return (
-          <SyntaxHighlighter
-            key={i}
-            language={language}
-            style={tomorrow}
-            customStyle={{
-              background: '#282c34',
-              borderRadius: '6px',
-              padding: '12px',
-              margin: '8px 0',
-              fontSize: '0.8em', 
-              maxHeight: '300px', 
-              overflow: 'auto' 
-            }}
-            showLineNumbers={false}
-            wrapLines={true}
-          >
-            {code}
-          </SyntaxHighlighter>
+          <div key={i} className="code-block-container">
+            <SyntaxHighlighter
+              language={language}
+              style={tomorrow}
+              customStyle={{
+                background: '#282c34',
+                borderRadius: '6px',
+                padding: '12px',
+                margin: '8px 0',
+                fontSize: '0.8em', 
+                maxHeight: '300px', 
+                overflow: 'auto' 
+              }}
+              showLineNumbers={true}
+              wrapLines={true}
+            >
+              {code}
+            </SyntaxHighlighter>
+            {language === 'haskell' && (
+              <button 
+                className="apply-code-button"
+                onClick={() => applyCodeChange(code)}
+              >
+                Apply Code
+              </button>
+            )}
+          </div>
         );
       }
       return (

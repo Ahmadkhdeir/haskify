@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import './HaskellEditor.css';
-import runButtonIcon from '/Users/ahmad/Desktop/Haskify/src/assets/run.png';
 import haskellMonarch from '../../monaco-haskell'; 
+
+let editorInstance = null;
 
 function handleEditorWillMount(monaco) {
   monaco.languages.register({ id: 'haskell' });
@@ -37,6 +38,39 @@ function handleEditorWillMount(monaco) {
 export default function HaskellEditor({ sharedState, updateSharedState }) {
   const [isRunning, setIsRunning] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [changedLines, setChangedLines] = useState([]);
+
+  useEffect(() => {
+    if (editorInstance && changedLines.length > 0) {
+      // Create decorations for changed lines
+      const decorations = changedLines.map(line => ({
+        range: {
+          startLineNumber: line,
+          startColumn: 1,
+          endLineNumber: line,
+          endColumn: 1
+        },
+        options: {
+          isWholeLine: true,
+          className: 'highlight-line',
+          stickiness: 1
+        }
+      }));
+
+      const decorationIds = editorInstance.deltaDecorations([], decorations);
+
+      const timer = setTimeout(() => {
+        editorInstance.deltaDecorations(decorationIds, []);
+        setChangedLines([]);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [changedLines]);
+
+  const handleEditorDidMount = (editor) => {
+    editorInstance = editor;
+  };
 
   useEffect(() => {
     fetch('http://localhost:5001/health')
@@ -94,6 +128,7 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
           value={sharedState.code}
           onChange={(value) => updateSharedState({ code: value || '' })}
           beforeMount={handleEditorWillMount}
+          onMount={handleEditorDidMount}
           options={{
             minimap: { enabled: false },
             fontSize: 14,
@@ -122,7 +157,6 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
               onClick={handleRunCode}
               disabled={isRunning || !isConnected}
             >
-              <img src={runButtonIcon} alt="Run" />
               {isRunning ? 'Running...' : 'Run'}
             </button>
           </div>

@@ -8,6 +8,23 @@
   border: 1px solid #3a3a3a;
 }
 
+@keyframes highlightLine {
+  0% {
+    background-color: rgba(255, 255, 0, 0.4);
+  }
+  50% {
+    background-color: rgba(255, 255, 0, 0.2);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlight-line {
+  animation: highlightLine 2s ease-out;
+  border-left: 3px solid #ffd700;
+}
+
 .editor-section {
   flex: 3;
   min-height: 70%;
@@ -72,7 +89,6 @@
   padding: 0.3rem 0.6rem;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
   cursor: pointer;
   font-family: 'Jura', sans-serif;
   font-size: 13px;
@@ -80,17 +96,12 @@
 }
 
 .run-button:hover {
-  background: #1177bb;
+  background: #eceaea;
 }
 
 .run-button:disabled {
-  background: #555;
+  background: #eceaea;
   cursor: not-allowed;
-}
-
-.run-button img {
-  height: 14px;
-  width: 14px;
 }
 
 .output-content {

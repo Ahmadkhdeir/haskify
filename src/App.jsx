@@ -47,6 +47,7 @@ main = putStrLn "Hello, Haskell!"`,
             <h2 className="shared-title">AI Assistant</h2>
             <AIAssistant 
               sharedState={sharedState}
+              updateSharedState={updateSharedState}
             />
           </div>
         </div>
