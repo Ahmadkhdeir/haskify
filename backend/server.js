@@ -31,36 +31,57 @@ const openai = new OpenAI({
   baseURL: "https://api.deepseek.com/v1",  
 });
 
+const exampleConversations = [
+  {
+    role: "system",
+    content: "Example 1 - Concise Monad Explanation:\nUser: \"What's a monad?\"\nAssistant: \"A monad is a type class for handling effects. Example:\n\n```haskell\nsafeDivide :: Double -> Double -> Maybe Double\nsafeDivide _ 0 = Nothing\nsafeDivide x y = Just (x / y)\n\nresult = do\n    x <- safeDivide 10 2\n    y <- safeDivide x 2\n    return y\n```\n\nHandles computations that might fail, like division by zero.\""
+  },
+  {
+    role: "system",
+    content: "Example 2 - Type Signatures:\nUser: \"Why use type signatures?\"\nAssistant: \"Type signatures provide:\n1. Documentation\n2. Type safety\n3. Better error messages\n\nExample:\n```haskell\nadd :: Num a => a -> a -> a\nadd x y = x + y\n```\n\nCatches type errors at compile time.\""
+  },
+  {
+    role: "system",
+    content: "Example 3 - Pattern Matching:\nUser: \"How to use pattern matching?\"\nAssistant: \"Pattern matching deconstructs data:\n\n```haskell\nsumList :: [Int] -> Int\nsumList [] = 0\nsumList (x:xs) = x + sumList xs\n\ndata Shape = Circle Double | Rectangle Double Double\narea (Circle r) = pi * r * r\narea (Rectangle w h) = w * h\n```\n\nCleaner than if-then-else.\""
+  }
+];
+
 app.post('/ai/ask', async (req, res) => {
   try {
     const { query, code, output } = req.body;
     
-    const systemMessage = `You are a Haskell programming assistant. 
-    The user's current code is:
-    \`\`\`haskell
-    ${code}
-    \`\`\`
-    ${output ? `The last execution output was:
-    \`\`\`
-    ${output}
-    \`\`\`` : ''}
-    
-    When suggesting code changes:
-    1. Always include the complete code with all comments
-    2. Keep the same structure and formatting
-    3. Only fix the specific issues mentioned
-    4. Preserve any existing comments and documentation
-    5. Format your response with proper code blocks
-    
-    Provide helpful, accurate responses about Haskell programming. 
-    If the user asks about their code, analyze it and suggest improvements.
-    If there are errors, explain them clearly.
-    Always format code blocks with proper syntax highlighting.`;
+    const systemMessage = `You are a concise Haskell and functional programming expert. Keep responses:
+1. Short and to the point
+2. Clear and direct
+3. No repetition
+4. Focus on key concepts
+5. Use minimal but effective examples
+
+The user's current code is:
+\`\`\`haskell
+${code}
+\`\`\`
+${output ? `The last execution output was:
+\`\`\`
+${output}
+\`\`\`` : ''}
+
+When suggesting code changes:
+1. Include only necessary code
+2. Keep comments minimal but clear
+3. Focus on the specific issue
+4. No redundant explanations
+5. Format code blocks properly
+
+Provide direct, accurate responses about Haskell programming. 
+If there are errors, explain them briefly.
+Format code blocks with proper syntax highlighting.`;
 
     const stream = await openai.chat.completions.create({
       model: "deepseek-chat",
       messages: [
         { role: "system", content: systemMessage },
+        ...exampleConversations,
         { role: "user", content: query }
       ],
       stream: true,
