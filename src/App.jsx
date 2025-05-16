@@ -6,6 +6,7 @@ import PdfViewer from './components/PdfViewer/PdfViewer';
 import './App.css';
 import HaskellEditor from './Components/HaskellEditor/HaskellEditor';
 import AIAssistant from './Components/AIAssistant/AIAssistant';
+import ContactModal from './Components/ContactModal/ContactModal';
 
 function App() {
   const [pdfData, setPdfData] = useState({ url: null, name: null });
@@ -15,6 +16,7 @@ main :: IO ()
 main = putStrLn "Hello, Haskell!"`,
     output: "> Ready to run Haskell code"
   });
+  const [isContactOpen, setContactOpen] = useState(false);
 
   const handlePdfUpload = (url, name) => {
     if (pdfData.url) {
@@ -52,7 +54,8 @@ main = putStrLn "Hello, Haskell!"`,
           </div>
         </div>
       </main>
-      <Footer />
+      <Footer onContactClick={() => setContactOpen(true)} />
+      <ContactModal isOpen={isContactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );
 }

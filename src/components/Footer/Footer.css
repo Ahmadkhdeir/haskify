@@ -19,15 +19,28 @@
 
 .footer-link {
   color: #333;
+  font-family: 'Jura', sans-serif;
   font-weight: 500;
   font-size: 1.3rem;
   padding: 0.5rem 1rem;
   transition: background-color 0.2s;
+  background: none;
+  border: none;
+  outline: none;
+  text-decoration: underline;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .footer-link:hover {
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 8px;
+}
+
+.footer-link:active,
+.footer-link:focus {
+  outline: none;
 }
 
 .copyright {

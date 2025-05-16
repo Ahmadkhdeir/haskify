@@ -7,6 +7,7 @@ import { exec } from 'child_process';
 import util from 'util';
 import fs from 'fs';
 import rateLimit from 'express-rate-limit';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 const execPromise = util.promisify(exec);
@@ -128,6 +129,32 @@ app.post('/run-haskell', executionLimiter, async (req, res) => {
     res.status(500).json({ 
       output: error.stderr || "Execution timed out or crashed" 
     });
+  }
+});
+
+app.post('/api/contact', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'my_gmail@gmail.com',    
+      pass: 'my_gmail_app_password',  
+    },
+  });
+
+  try {
+    await transporter.sendMail({
+      from: email,
+      to: 'xx@yy.com', // TODO: my destination email
+      subject: `Contact Form Submission from ${name}`,
+      text: message,
+      replyTo: email,
+    });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Email send error:', err);
+    res.status(500).json({ success: false, error: 'Failed to send email' });
   }
 });
 
