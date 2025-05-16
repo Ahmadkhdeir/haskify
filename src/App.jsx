@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './Components/Header/Header';
 import Footer from './Components/Footer/Footer';
 import UploadButton from './components/UploadButton/UploadButton';
@@ -7,6 +8,7 @@ import './App.css';
 import HaskellEditor from './Components/HaskellEditor/HaskellEditor';
 import AIAssistant from './Components/AIAssistant/AIAssistant';
 import ContactModal from './Components/ContactModal/ContactModal';
+import Documentation from './pages/Documentation';
 
 function App() {
   const [pdfData, setPdfData] = useState({ url: null, name: null });
@@ -30,33 +32,55 @@ main = putStrLn "Hello, Haskell!"`,
   };
 
   return (
-    <div className="app-layout">
-      <Header />
-      <main className="main-content">
-        <UploadButton onPdfUpload={handlePdfUpload} />
-        <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
-        
-        <div className="code-ai-grid">
-          <div className='grid-item'>
-            <h2 className="shared-title">Code Editor</h2>
-            <HaskellEditor 
-              sharedState={sharedState}
-              updateSharedState={updateSharedState}
-            />
-          </div>
-          
-          <div className='grid-item'>
-            <h2 className="shared-title">AI Assistant</h2>
-            <AIAssistant 
-              sharedState={sharedState}
-              updateSharedState={updateSharedState}
-            />
-          </div>
-        </div>
-      </main>
-      <Footer onContactClick={() => setContactOpen(true)} />
-      <ContactModal isOpen={isContactOpen} onClose={() => setContactOpen(false)} />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="app-layout">
+              <Header />
+              <main className="main-content">
+                <UploadButton onPdfUpload={handlePdfUpload} />
+                <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
+                
+                <div className="code-ai-grid">
+                  <div className='grid-item'>
+                    <h2 className="shared-title">Code Editor</h2>
+                    <HaskellEditor 
+                      sharedState={sharedState}
+                      updateSharedState={updateSharedState}
+                    />
+                  </div>
+                  
+                  <div className='grid-item'>
+                    <h2 className="shared-title">AI Assistant</h2>
+                    <AIAssistant 
+                      sharedState={sharedState}
+                      updateSharedState={updateSharedState}
+                    />
+                  </div>
+                </div>
+              </main>
+              <Footer onContactClick={() => setContactOpen(true)} />
+              <ContactModal isOpen={isContactOpen} onClose={() => setContactOpen(false)} />
+            </div>
+          }
+        />
+        <Route
+          path="/documentation"
+          element={
+            <div className="app-layout">
+              <Header />
+              <main className="main-content">
+                <Documentation />
+              </main>
+              <Footer onContactClick={() => setContactOpen(true)} />
+              <ContactModal isOpen={isContactOpen} onClose={() => setContactOpen(false)} />
+            </div>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
