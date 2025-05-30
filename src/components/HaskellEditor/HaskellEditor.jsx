@@ -91,16 +91,20 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
     updateSharedState({ output: "> Running Haskell code..." });
 
     try {
+      console.log('Sending code to backend:', sharedState.code);
       const response = await fetch('http://localhost:5001/run-haskell', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: sharedState.code })
       });
 
+      console.log('Received response:', response.status);
       let result;
       try {
         result = await response.json();
+        console.log('Parsed result:', result);
       } catch (e) {
+        console.error('Error parsing response:', e);
         updateSharedState({ output: "> Error: Could not parse error output" });
         setIsRunning(false);
         return;
@@ -112,6 +116,7 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
         updateSharedState({ output: result.output || "> Program executed (no output)" });
       }
     } catch (error) {
+      console.error('Error executing code:', error);
       updateSharedState({ output: `> Error: ${error.message || "Failed to execute code"}` });
     } finally {
       setIsRunning(false);

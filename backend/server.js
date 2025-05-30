@@ -101,33 +101,77 @@ Format code blocks with proper syntax highlighting.`;
 });
 
 app.post('/run-haskell', executionLimiter, async (req, res) => {
+  console.log('Received Haskell code execution request');
   try {
     if (!req.body.code || typeof req.body.code !== 'string' || req.body.code.length > 10000) {
+      console.log('Invalid code received');
       return res.status(400).json({ output: "Invalid code: Must be <10KB" });
     }
 
     if (req.body.code.includes('System.IO.Unsafe') || 
         req.body.code.includes('unsafePerformIO')) {
+      console.log('Unsafe operations detected');
       return res.status(400).json({ output: "Unsafe operations not allowed" });
     }
 
     const tempFile = `/tmp/haskell-${Date.now()}.hs`;
+    console.log('Writing code to temporary file:', tempFile);
     fs.writeFileSync(tempFile, req.body.code);
 
-    const { stdout, stderr } = await execPromise(
-      `timeout 5s ghc ${tempFile} -o ${tempFile}.out && ${tempFile}.out`,
-      { maxBuffer: 1024 * 1024 } 
-    );
+    // First compile the code
+    try {
+      console.log('Starting compilation...');
+      const { stderr: compileError } = await execPromise(
+        `ghc ${tempFile} -o ${tempFile}.out`,
+        { maxBuffer: 1024 * 1024 }
+      );
+      
+      if (compileError) {
+        console.log('Compilation error:', compileError);
+        return res.status(400).json({ output: compileError });
+      }
+      console.log('Compilation successful');
+    } catch (compileError) {
+      console.log('Compilation failed:', compileError);
+      return res.status(400).json({ 
+        output: compileError.stderr || "Compilation failed" 
+      });
+    }
 
-    fs.unlinkSync(tempFile);
-    if (fs.existsSync(`${tempFile}.out`)) fs.unlinkSync(`${tempFile}.out`);
+    // Then run the compiled program with a longer timeout
+    try {
+      console.log('Starting program execution...');
+      const { stdout, stderr } = await execPromise(
+        `timeout 10s ${tempFile}.out`,
+        { maxBuffer: 1024 * 1024 }
+      );
 
-    res.json({ 
-      output: stdout || stderr || "> Program executed (no output)" 
-    });
+      console.log('Program execution completed');
+      // Clean up
+      fs.unlinkSync(tempFile);
+      if (fs.existsSync(`${tempFile}.out`)) fs.unlinkSync(`${tempFile}.out`);
+      if (fs.existsSync(`${tempFile}.hi`)) fs.unlinkSync(`${tempFile}.hi`);
+      if (fs.existsSync(`${tempFile}.o`)) fs.unlinkSync(`${tempFile}.o`);
+
+      res.json({ 
+        output: stdout || stderr || "> Program executed (no output)" 
+      });
+    } catch (runError) {
+      console.log('Program execution failed:', runError);
+      // Clean up even if execution fails
+      fs.unlinkSync(tempFile);
+      if (fs.existsSync(`${tempFile}.out`)) fs.unlinkSync(`${tempFile}.out`);
+      if (fs.existsSync(`${tempFile}.hi`)) fs.unlinkSync(`${tempFile}.hi`);
+      if (fs.existsSync(`${tempFile}.o`)) fs.unlinkSync(`${tempFile}.o`);
+
+      res.status(500).json({ 
+        output: runError.stderr || "Execution timed out or crashed" 
+      });
+    }
   } catch (error) {
+    console.log('Unexpected error:', error);
     res.status(500).json({ 
-      output: error.stderr || "Execution timed out or crashed" 
+      output: error.stderr || "An unexpected error occurred" 
     });
   }
 });
