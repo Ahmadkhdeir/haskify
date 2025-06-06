@@ -12,6 +12,7 @@ import Documentation from './pages/Documentation';
 
 function App() {
   const [pdfData, setPdfData] = useState({ url: null, name: null });
+  const [showUploadButton, setShowUploadButton] = useState(false);
   const [sharedState, setSharedState] = useState({
     code: `-- Your Haskell code here
 main :: IO ()
@@ -40,7 +41,7 @@ main = putStrLn "Hello, Haskell!"`,
             <div className="app-layout">
               <Header />
               <main className="main-content">
-                <UploadButton onPdfUpload={handlePdfUpload} />
+                {showUploadButton && <UploadButton onPdfUpload={handlePdfUpload} />}
                 <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
                 
                 <div className="code-ai-grid">
