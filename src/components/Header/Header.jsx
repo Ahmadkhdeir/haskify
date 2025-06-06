@@ -4,7 +4,7 @@ import logo from '../../assets/logo.png';
 import { Link } from 'react-router-dom';
 
 
-export default function Header() {
+export default function Header({ onHowItWorksClick }) {
   return (
     <header className="haskify-header">
       <div className="header-content">
@@ -16,7 +16,7 @@ export default function Header() {
         </div>
         <nav className="header-nav">
           <a href="/" className="nav-link">Home</a>
-          <a href="/how-it-works" className="nav-link">How Does It Work?</a>
+          <button onClick={onHowItWorksClick} className="nav-link-button">How Does It Work?</button>
         </nav>
       </div>
     </header>

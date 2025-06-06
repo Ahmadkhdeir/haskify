@@ -1,0 +1,70 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #f8f8f8;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 90%;
+  min-width: unset;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+  position: relative;
+  font-family: 'Jura', sans-serif;
+  color: #222;
+  border: 1px solid #d0d0d0;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}
+
+.modal-content p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: inherit;
+}
+
+.modal-content strong {
+  color: #222;
+  font-weight: bold;
+}
+
+.modal-content br {
+  content: '';
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.close-button:hover {
+  color: #555;
+} 

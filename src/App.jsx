@@ -8,7 +8,7 @@ import './App.css';
 import HaskellEditor from './Components/HaskellEditor/HaskellEditor';
 import AIAssistant from './Components/AIAssistant/AIAssistant';
 import ContactModal from './Components/ContactModal/ContactModal';
-import Documentation from './pages/Documentation';
+import HowItWorksModal from './Components/HowItWorksModal/HowItWorksModal';
 
 function App() {
   const [pdfData, setPdfData] = useState({ url: null, name: null });
@@ -20,6 +20,7 @@ main = putStrLn "Hello, Haskell!"`,
     output: "> Ready to run Haskell code"
   });
   const [isContactOpen, setContactOpen] = useState(false);
+  const [isHowItWorksOpen, setHowItWorksOpen] = useState(false);
 
   const handlePdfUpload = (url, name) => {
     if (pdfData.url) {
@@ -39,7 +40,7 @@ main = putStrLn "Hello, Haskell!"`,
           path="/"
           element={
             <div className="app-layout">
-              <Header />
+              <Header onHowItWorksClick={() => setHowItWorksOpen(true)} />
               <main className="main-content">
                 {showUploadButton && <UploadButton onPdfUpload={handlePdfUpload} />}
                 <PdfViewer pdfUrl={pdfData.url} pdfName={pdfData.name} />
@@ -63,19 +64,7 @@ main = putStrLn "Hello, Haskell!"`,
                 </div>
               </main>
               <Footer onContactClick={() => setContactOpen(true)} />
-              <ContactModal isOpen={isContactOpen} onClose={() => setContactOpen(false)} />
-            </div>
-          }
-        />
-        <Route
-          path="/documentation"
-          element={
-            <div className="app-layout">
-              <Header />
-              <main className="main-content">
-                <Documentation />
-              </main>
-              <Footer onContactClick={() => setContactOpen(true)} />
+              <HowItWorksModal isOpen={isHowItWorksOpen} onClose={() => setHowItWorksOpen(false)} />
               <ContactModal isOpen={isContactOpen} onClose={() => setContactOpen(false)} />
             </div>
           }
