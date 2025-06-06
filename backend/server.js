@@ -118,7 +118,6 @@ app.post('/run-haskell', executionLimiter, async (req, res) => {
     console.log('Writing code to temporary file:', tempFile);
     fs.writeFileSync(tempFile, req.body.code);
 
-    // First compile the code
     try {
       console.log('Starting compilation...');
       const { stderr: compileError } = await execPromise(
@@ -138,16 +137,14 @@ app.post('/run-haskell', executionLimiter, async (req, res) => {
       });
     }
 
-    // Then run the compiled program with a longer timeout
     try {
       console.log('Starting program execution...');
       const { stdout, stderr } = await execPromise(
-        `timeout 10s ${tempFile}.out`,
+        `echo "${req.body.input || ''}" | timeout 10s ${tempFile}.out`,
         { maxBuffer: 1024 * 1024 }
       );
 
       console.log('Program execution completed');
-      // Clean up
       fs.unlinkSync(tempFile);
       if (fs.existsSync(`${tempFile}.out`)) fs.unlinkSync(`${tempFile}.out`);
       if (fs.existsSync(`${tempFile}.hi`)) fs.unlinkSync(`${tempFile}.hi`);
@@ -158,7 +155,6 @@ app.post('/run-haskell', executionLimiter, async (req, res) => {
       });
     } catch (runError) {
       console.log('Program execution failed:', runError);
-      // Clean up even if execution fails
       fs.unlinkSync(tempFile);
       if (fs.existsSync(`${tempFile}.out`)) fs.unlinkSync(`${tempFile}.out`);
       if (fs.existsSync(`${tempFile}.hi`)) fs.unlinkSync(`${tempFile}.hi`);

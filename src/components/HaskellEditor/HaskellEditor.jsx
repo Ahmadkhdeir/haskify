@@ -39,6 +39,7 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
   const [isRunning, setIsRunning] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [changedLines, setChangedLines] = useState([]);
+  const [userInput, setUserInput] = useState('');
 
   useEffect(() => {
     if (editorInstance && changedLines.length > 0) {
@@ -95,7 +96,10 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
       const response = await fetch('http://localhost:5001/run-haskell', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: sharedState.code })
+        body: JSON.stringify({ 
+          code: sharedState.code,
+          input: userInput 
+        })
       });
 
       console.log('Received response:', response.status);
@@ -150,6 +154,16 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
             formatOnType: true,
             suggestOnTriggerCharacters: true
           }}
+        />
+      </div>
+
+      <div className="input-field-container">
+        <input
+          type="text"
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          placeholder="Enter input for your program..."
+          className="program-input"
         />
       </div>
 

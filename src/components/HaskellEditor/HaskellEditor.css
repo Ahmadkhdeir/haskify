@@ -37,17 +37,18 @@
   color: #d4d4d4;
   position: relative;
   min-height: 30%;
-  max-height: 10vh;
+  max-height: 35vh;
   overflow: hidden; 
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 .output-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0rem;
 }
 
 .output-section pre {
@@ -111,4 +112,30 @@
   border-radius: 4px;
   max-height: 300px;
   overflow-y: auto;
+  margin-top: 0;
+}
+
+.input-field {
+  margin: 0;
+  padding: 0 0.5rem;
+}
+
+.program-input {
+  width: 100%;
+  padding: 0.5rem;
+  background: #1e1e1e;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  color: #d4d4d4;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.program-input:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.program-input::placeholder {
+  color: #6b6b6b;
 }
