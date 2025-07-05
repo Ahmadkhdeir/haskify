@@ -70,7 +70,7 @@ export default function AIAssistant({ sharedState, updateSharedState }) {
 
   const sendToBackend = async (query) => {
     try {
-      const response = await fetch('http://localhost:5001/ai/ask', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/ai/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

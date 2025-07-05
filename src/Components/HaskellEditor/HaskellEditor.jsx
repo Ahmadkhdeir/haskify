@@ -74,7 +74,7 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
   };
 
   useEffect(() => {
-    fetch('http://localhost:5001/health')
+    fetch(`${import.meta.env.VITE_API_URL}/health`)
       .then(() => setIsConnected(true))
       .catch(() => {
         setIsConnected(false);
@@ -93,7 +93,7 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
 
     try {
       console.log('Sending code to backend:', sharedState.code);
-      const response = await fetch('http://localhost:5001/run-haskell', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/run-haskell`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

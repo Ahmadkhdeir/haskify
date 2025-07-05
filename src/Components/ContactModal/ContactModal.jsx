@@ -16,7 +16,7 @@ export default function ContactModal({ isOpen, onClose }) {
               email: e.target[1].value,
               message: e.target[2].value,
             };
-            const res = await fetch('http://localhost:5001/api/contact', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/contact`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(data),
