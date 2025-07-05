@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './App.css';
 import Header from './Components/Header/Header';
 import Footer from './Components/Footer/Footer';
-import UploadButton from './components/UploadButton/UploadButton';
-import PdfViewer from './components/PdfViewer/PdfViewer';
-import './App.css';
+import UploadButton from './Components/UploadButton/UploadButton';
+import PdfViewer from './Components/PdfViewer/PdfViewer';
 import HaskellEditor from './Components/HaskellEditor/HaskellEditor';
 import AIAssistant from './Components/AIAssistant/AIAssistant';
 import ContactModal from './Components/ContactModal/ContactModal';
 import HowItWorksModal from './Components/HowItWorksModal/HowItWorksModal';
+
 
 function App() {
   const [pdfData, setPdfData] = useState({ url: null, name: null });
