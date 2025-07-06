@@ -1,24 +1,25 @@
-# Nutze offizielles Haskell-Image als Basis
-FROM haskell:latest
+# Basis: Debian + GHC + Node
+FROM ubuntu:22.04
 
-# Installiere Node.js und npm
+# GHC + Node installieren
 RUN apt-get update && \
-    apt-get install -y curl gnupg && \
+    apt-get install -y curl gnupg build-essential && \
+    apt-get install -y haskell-platform && \
     curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs npm
+    apt-get install -y nodejs
 
-# Setze Arbeitsverzeichnis
+# Arbeitsverzeichnis
 WORKDIR /app
 
-# Kopiere alle Dateien ins Image
+# Dateien ins Image kopieren
 COPY . .
 
-# Gehe in das backend-Verzeichnis und installiere npm-Pakete
+# In backend wechseln und Node-Pakete installieren
 WORKDIR /app/backend
 RUN npm install
 
-# Exponiere Port 5001 für das Backend
+# Port öffnen
 EXPOSE 5001
 
-# Starte das Backend
+# Backend starten
 CMD ["node", "server.js"]
