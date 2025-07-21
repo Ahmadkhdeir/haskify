@@ -8,6 +8,7 @@ import util from 'util';
 import fs from 'fs';
 import rateLimit from 'express-rate-limit';
 import nodemailer from 'nodemailer';
+import mongoose from 'mongoose';
 
 dotenv.config();
 const execPromise = util.promisify(exec);
@@ -16,7 +17,7 @@ const PORT = 5001;
 
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PATCH'],
   credentials: false
 }));
 
@@ -193,6 +194,42 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
+app.post('/api/save-session', async (req, res) => {
+  try {
+    const { session } = req.body; 
+    if (!Array.isArray(session) || session.length === 0) {
+      return res.status(400).json({ success: false, error: 'Session data required' });
+    }
+    const saved = await Session.create({ session });
+    res.json({ success: true, id: saved._id });
+  } catch (err) {
+    console.error('Save session error:', err);
+    res.status(500).json({ success: false, error: 'Failed to save session' });
+  }
+});
+
+app.patch('/api/save-session/:id', async (req, res) => {
+  try {
+    const { session } = req.body;
+    const { id } = req.params;
+    if (!Array.isArray(session) || session.length === 0) {
+      return res.status(400).json({ success: false, error: 'Session data required' });
+    }
+    const updated = await Session.findByIdAndUpdate(
+      id,
+      { session },
+      { new: true }
+    );
+    if (!updated) {
+      return res.status(404).json({ success: false, error: 'Session not found' });
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Update session error:', err);
+    res.status(500).json({ success: false, error: 'Failed to update session' });
+  }
+});
+
 app.get('/health', (req, res) => {
   res.send('OK');
 });
@@ -200,3 +237,26 @@ app.get('/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+dotenv.config();
+
+const mongoUri = process.env.MONGODB_URI;
+if (mongoUri) {
+  mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
+} else {
+  console.warn('No MONGODB_URI found in .env, MongoDB not connected');
+}
+
+const sessionSchema = new mongoose.Schema({
+  createdAt: { type: Date, default: Date.now },
+  session: [
+    {
+      question: String,
+      response: String,
+      time: { type: Date, default: Date.now }
+    }
+  ]
+});
+const Session = mongoose.models.Session || mongoose.model('Session', sessionSchema);

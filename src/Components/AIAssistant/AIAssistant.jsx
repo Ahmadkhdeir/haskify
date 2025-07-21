@@ -12,6 +12,8 @@ export default function AIAssistant({ sharedState, updateSharedState }) {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const typingIntervalRef = useRef(null);
+  const sessionHistoryRef = useRef([]);
+  const sessionIdRef = useRef(null);
 
   useEffect(() => {
     const initialMessage = "Hi! How can I help you with your Haskell project today?";
@@ -40,6 +42,11 @@ export default function AIAssistant({ sharedState, updateSharedState }) {
           }
         ]);
         setIsTyping(false);
+        sessionHistoryRef.current.push({
+          question: null,
+          response: initialMessage,
+          time: new Date().toISOString()
+        });
       }
     }, 15);
 
@@ -49,6 +56,24 @@ export default function AIAssistant({ sharedState, updateSharedState }) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (sessionHistoryRef.current.length > 0) {
+        console.log('Auto-saving session:', sessionHistoryRef.current);
+        const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
+        const payload = JSON.stringify({ session: sessionHistoryRef.current });
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon(`${API_BASE}/api/save-session`, blob);
+      } else {
+        console.log('No session history to save.');
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const handleSend = async () => {
     if (input.trim() && !isLoading && !isTyping) {
@@ -63,6 +88,11 @@ export default function AIAssistant({ sharedState, updateSharedState }) {
         isLoading: true 
       }]);
       
+      sessionHistoryRef.current.push({
+        question: input,
+        response: null,
+        time: new Date().toISOString()
+      });
       await sendToBackend(input);
       setIsLoading(false);
     }
@@ -127,6 +157,32 @@ export default function AIAssistant({ sharedState, updateSharedState }) {
             ];
           });
           setIsTyping(false);
+          const last = sessionHistoryRef.current[sessionHistoryRef.current.length - 1];
+          if (last && last.response === null) {
+            last.response = responseText;
+          }
+
+          const payload = { session: sessionHistoryRef.current };
+
+          if (!sessionIdRef.current) {
+            fetch(`${API_BASE}/api/save-session`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            })
+              .then(res => res.json())
+              .then(data => {
+                if (data.success && data.id) {
+                  sessionIdRef.current = data.id;
+                }
+              });
+          } else {
+            fetch(`${API_BASE}/api/save-session/${sessionIdRef.current}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+          }
         }
       }, 15);
     } catch (error) {
@@ -141,6 +197,10 @@ export default function AIAssistant({ sharedState, updateSharedState }) {
       });
       setIsLoading(false);
       setIsTyping(false);
+      const last = sessionHistoryRef.current[sessionHistoryRef.current.length - 1];
+      if (last && last.response === null) {
+        last.response = "⚠️ Error connecting to AI. Please try again later.";
+      }
     }
   };
 
