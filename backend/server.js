@@ -14,20 +14,11 @@ const execPromise = util.promisify(exec);
 const app = express();
 const PORT = 5001;
 
-// CORS configuration - allow all origins in development
-const corsOptions = process.env.NODE_ENV === 'development' 
-  ? {
-      origin: '*',
-      methods: ['GET', 'POST'],
-      credentials: false
-    }
-  : {
-      origin: ['http://localhost:5173', 'https://haskify.vercel.app'],
-      methods: ['GET', 'POST'],
-      credentials: true
-    };
-
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  credentials: false
+}));
 
 app.use(express.json());
 
@@ -153,12 +144,6 @@ app.post('/run-haskell', executionLimiter, async (req, res) => {
         `echo "${req.body.input || ''}" | timeout 10s ${tempFile}.out`,
         { maxBuffer: 1024 * 1024 }
       );
-
-      console.log('Program execution completed');
-      fs.unlinkSync(tempFile);
-      if (fs.existsSync(`${tempFile}.out`)) fs.unlinkSync(`${tempFile}.out`);
-      if (fs.existsSync(`${tempFile}.hi`)) fs.unlinkSync(`${tempFile}.hi`);
-      if (fs.existsSync(`${tempFile}.o`)) fs.unlinkSync(`${tempFile}.o`);
 
       res.json({ 
         output: stdout || stderr || "> Program executed (no output)" 

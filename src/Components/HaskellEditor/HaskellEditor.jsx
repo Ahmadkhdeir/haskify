@@ -41,6 +41,8 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
   const [changedLines, setChangedLines] = useState([]);
   const [userInput, setUserInput] = useState('');
 
+  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
+
   useEffect(() => {
     if (editorInstance && changedLines.length > 0) {
       // Create decorations for changed lines
@@ -74,7 +76,7 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
   };
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/health`)
+    fetch(`${API_BASE}/health`)
       .then(() => setIsConnected(true))
       .catch(() => {
         setIsConnected(false);
@@ -93,7 +95,7 @@ export default function HaskellEditor({ sharedState, updateSharedState }) {
 
     try {
       console.log('Sending code to backend:', sharedState.code);
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/run-haskell`, {
+      const response = await fetch(`${API_BASE}/run-haskell`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
