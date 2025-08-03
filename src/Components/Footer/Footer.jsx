@@ -7,7 +7,7 @@ export default function Footer({ onContactClick }) {
       <div className="footer-content">
         <button className="footer-link" onClick={onContactClick}>Contact us</button>
         <span className="copyright">All rights reserved © 2025</span>
-        <a href="/documentation" className="footer-link">Documentation</a>
+        <a href="/documentation" className="footer-link"></a>
       </div>
     </footer>
   );
