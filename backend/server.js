@@ -37,15 +37,19 @@ const openai = new OpenAI({
 const exampleConversations = [
   {
     role: "system",
-    content: "Example 1 - Concise Monad Explanation:\nUser: \"What's a monad?\"\nAssistant: \"A monad is a type class for handling effects. Example:\n\n```haskell\nsafeDivide :: Double -> Double -> Maybe Double\nsafeDivide _ 0 = Nothing\nsafeDivide x y = Just (x / y)\n\nresult = do\n    x <- safeDivide 10 2\n    y <- safeDivide x 2\n    return y\n```\n\nHandles computations that might fail, like division by zero.\""
+    content: "Example 1 - Hints Only:\nUser: \"I'm stuck with monads\"\nAssistant: \"Monads can be tricky! Let's break it down. Think of a monad as a way to handle 'wrapped' values. \n\nWhat do you think this does?\n```haskell\nsafeDivide :: Double -> Double -> Maybe Double\nsafeDivide _ 0 = Nothing\nsafeDivide x y = Just (x / y)\n```\n\nTry writing a function that uses this safely. What happens if you try to chain multiple divisions?\""
   },
   {
     role: "system",
-    content: "Example 2 - Type Signatures:\nUser: \"Why use type signatures?\"\nAssistant: \"Type signatures provide:\n1. Documentation\n2. Type safety\n3. Better error messages\n\nExample:\n```haskell\nadd :: Num a => a -> a -> a\nadd x y = x + y\n```\n\nCatches type errors at compile time.\""
+    content: "Example 2 - Debugging Hints:\nUser: \"My code has type errors\"\nAssistant: \"Type errors are Haskell's way of helping you! Can you share the error message? \n\nA few things to check:\n- Are your type signatures consistent?\n- What does GHC tell you about the expected vs actual types?\n- Have you imported the right modules?\n\nTry running `:t functionName` in GHCi to see what Haskell thinks the type should be.\""
   },
   {
     role: "system",
-    content: "Example 3 - Pattern Matching:\nUser: \"How to use pattern matching?\"\nAssistant: \"Pattern matching deconstructs data:\n\n```haskell\nsumList :: [Int] -> Int\nsumList [] = 0\nsumList (x:xs) = x + sumList xs\n\ndata Shape = Circle Double | Rectangle Double Double\narea (Circle r) = pi * r * r\narea (Rectangle w h) = w * h\n```\n\nCleaner than if-then-else.\""
+    content: "Example 3 - Partial Examples:\nUser: \"How do I use pattern matching?\"\nAssistant: \"Great question! Pattern matching is about deconstructing data. \n\nStart simple - what do you think this does?\n```haskell\nsumList :: [Int] -> Int\nsumList [] = ?\nsumList (x:xs) = ?\n```\n\nTry filling in the blanks! Think about: what's the base case? How do you combine the head with the rest?\""
+  },
+  {
+    role: "system",
+    content: "Example 4 - No Complete Solutions:\nUser: \"Write a function to reverse a list\"\nAssistant: \"Great exercise! Let's think about this step by step.\n\nWhat's the base case for reversing a list?\n\nFor the recursive case, if you have a list like [1,2,3], how would you reverse it? Think about:\n- What's the head?\n- What's the tail?\n- How do you combine them?\n\nTry writing the pattern matching first, then fill in the logic!\""
   }
 ];
 
@@ -53,12 +57,75 @@ app.post('/ai/ask', async (req, res) => {
   try {
     const { query, code, output } = req.body;
     
-    const systemMessage = `You are a concise Haskell and functional programming expert. Keep responses:
-1. Short and to the point
-2. Clear and direct
-3. No repetition
-4. Focus on key concepts
-5. Use minimal but effective examples
+    const simpleTestMessages = [
+      'test', 'hello', 'hi', 'hey', 'ok', 'yes', 'no', 'cool', 'nice', 'just testing',
+      'im just testing', 'i am just testing', 'just test', 'test test', 'hello there', 'hi there'
+    ];
+    
+    const queryLower = query.toLowerCase().trim();
+    
+    // Only catch very simple test messages, not requests for code
+    const isSimpleTest = simpleTestMessages.some(msg => 
+      queryLower === msg.toLowerCase() || 
+      (queryLower.includes(msg.toLowerCase()) && queryLower.length < 20)
+    );
+    
+    if (isSimpleTest) {
+      return res.json({ response: "Hi! I'm ready to help with Haskell questions." });
+    }
+    
+    const haskellKeywords = [
+      'haskell', 'monad', 'functor', 'applicative', 'type', 'function', 'pattern', 'matching',
+      'recursion', 'fold', 'map', 'filter', 'list', 'maybe', 'either', 'io', 'pure', 'bind',
+      'do notation', 'guard', 'where', 'let', 'in', 'data', 'newtype', 'class', 'instance',
+      'ghc', 'ghci', 'compile', 'error', 'type signature', 'lambda', 'curry', 'partial',
+      'lazy', 'evaluation', 'strict', 'tail', 'recursion', 'higher', 'order', 'function'
+    ];
+    
+    const haskellCodePatterns = [
+      /::/, /->/, /=>/, /<-/, /do/, /where/, /let/, /in/, /data/, /newtype/, /class/, /instance/,
+      /Maybe/, /Either/, /IO/, /Just/, /Nothing/, /Left/, /Right/, /putStrLn/, /return/,
+      /map/, /filter/, /fold/, /zip/, /unzip/, /head/, /tail/, /init/, /last/, /length/,
+      /reverse/, /sort/, /take/, /drop/, /concat/, /concatMap/, /and/, /or/, /any/, /all/
+    ];
+    
+    // Much stricter detection - must have explicit Haskell content
+    const hasExplicitHaskellContent = haskellKeywords.some(keyword => 
+      queryLower.includes(keyword.toLowerCase())
+    ) || haskellCodePatterns.some(pattern => 
+      pattern.test(query)
+    );
+    
+    // Allow clear questions OR requests for code
+    const isClearQuestion = query.includes('?') && (
+      query.includes('how') || query.includes('what') || query.includes('why') || 
+      query.includes('when') || query.includes('where') || query.includes('which')
+    );
+    
+    // Also allow requests for code (like "give me code", "show me code", etc.)
+    const isCodeRequest = queryLower.includes('code') || 
+                         queryLower.includes('give') || 
+                         queryLower.includes('show') || 
+                         queryLower.includes('write') ||
+                         queryLower.includes('create') ||
+                         queryLower.includes('make');
+    
+    const isHaskellQuestion = hasExplicitHaskellContent || isClearQuestion || isCodeRequest;
+    
+    if (!isHaskellQuestion) {
+      return res.json({ response: "I'm here to help with Haskell and functional programming! What would you like to learn about?" });
+    }
+    
+    const systemMessage = `You are a Haskell and functional programming tutor focused on guided learning. 
+
+CRITICAL RULES - FOLLOW THESE EXACTLY:
+1. ONLY respond to questions about Haskell, functional programming, or the user's code
+2. NEVER provide complete working solutions - only hints, guidance, and partial examples
+3. Ask questions to guide learning rather than giving answers
+4. Show partial code examples with placeholders (like ? or TODO), not complete working code
+5. Encourage the user to think and discover solutions themselves
+6. Focus on concepts, patterns, and learning approaches
+7. If asked to write a function, provide the type signature and partial implementation with placeholders
 
 The user's current code is:
 \`\`\`haskell
@@ -69,16 +136,17 @@ ${output ? `The last execution output was:
 ${output}
 \`\`\`` : ''}
 
-When suggesting code changes:
-1. Include only necessary code
-2. Keep comments minimal but clear
-3. Focus on the specific issue
-4. No redundant explanations
-5. Format code blocks properly
+When helping with code:
+1. Provide hints and guidance, not complete solutions
+2. Ask leading questions to help the user think
+3. Show partial examples that demonstrate concepts
+4. Explain the reasoning behind suggestions
+5. Encourage experimentation and discovery
+6. Keep responses focused and educational
+7. NEVER provide complete working code - only partial examples or hints
+8. Use placeholders like ? or TODO in code examples
 
-Provide direct, accurate responses about Haskell programming. 
-If there are errors, explain them briefly.
-Format code blocks with proper syntax highlighting.`;
+Format code blocks with proper syntax highlighting when showing examples.`;
 
     const stream = await openai.chat.completions.create({
       model: "deepseek-chat",
