@@ -37,19 +37,15 @@ const openai = new OpenAI({
 const exampleConversations = [
   {
     role: "system",
-    content: "Example 1 - Hints Only:\nUser: \"I'm stuck with monads\"\nAssistant: \"Monads can be tricky! Let's break it down. Think of a monad as a way to handle 'wrapped' values. \n\nWhat do you think this does?\n```haskell\nsafeDivide :: Double -> Double -> Maybe Double\nsafeDivide _ 0 = Nothing\nsafeDivide x y = Just (x / y)\n```\n\nTry writing a function that uses this safely. What happens if you try to chain multiple divisions?\""
+    content: "Example 1:\nUser: \"I'm stuck with monads\"\nAssistant: \"Try this:\n```haskell\nsafeDivide :: Double -> Double -> Maybe Double\nsafeDivide _ 0 = Nothing\nsafeDivide x y = ?\n```\nWhat happens when chaining?\""
   },
   {
     role: "system",
-    content: "Example 2 - Debugging Hints:\nUser: \"My code has type errors\"\nAssistant: \"Type errors are Haskell's way of helping you! Can you share the error message? \n\nA few things to check:\n- Are your type signatures consistent?\n- What does GHC tell you about the expected vs actual types?\n- Have you imported the right modules?\n\nTry running `:t functionName` in GHCi to see what Haskell thinks the type should be.\""
+    content: "Example 2:\nUser: \"My code has type errors\"\nAssistant: \"Run `:t functionName` in GHCi. Check type signatures.\""
   },
   {
     role: "system",
-    content: "Example 3 - Partial Examples:\nUser: \"How do I use pattern matching?\"\nAssistant: \"Great question! Pattern matching is about deconstructing data. \n\nStart simple - what do you think this does?\n```haskell\nsumList :: [Int] -> Int\nsumList [] = ?\nsumList (x:xs) = ?\n```\n\nTry filling in the blanks! Think about: what's the base case? How do you combine the head with the rest?\""
-  },
-  {
-    role: "system",
-    content: "Example 4 - No Complete Solutions:\nUser: \"Write a function to reverse a list\"\nAssistant: \"Great exercise! Let's think about this step by step.\n\nWhat's the base case for reversing a list?\n\nFor the recursive case, if you have a list like [1,2,3], how would you reverse it? Think about:\n- What's the head?\n- What's the tail?\n- How do you combine them?\n\nTry writing the pattern matching first, then fill in the logic!\""
+    content: "Example 3:\nUser: \"Write a reverse function\"\nAssistant: \"```haskell\nreverse :: [a] -> [a]\nreverse [] = ?\nreverse (x:xs) = ?\n```\nHow combine head with reversed tail?\""
   }
 ];
 
@@ -64,7 +60,6 @@ app.post('/ai/ask', async (req, res) => {
     
     const queryLower = query.toLowerCase().trim();
     
-    // Only catch very simple test messages, not requests for code
     const isSimpleTest = simpleTestMessages.some(msg => 
       queryLower === msg.toLowerCase() || 
       (queryLower.includes(msg.toLowerCase()) && queryLower.length < 20)
@@ -116,37 +111,22 @@ app.post('/ai/ask', async (req, res) => {
       return res.json({ response: "I'm here to help with Haskell and functional programming! What would you like to learn about?" });
     }
     
-    const systemMessage = `You are a Haskell and functional programming tutor focused on guided learning. 
+    const systemMessage = `You are a concise Haskell tutor. MAXIMUM 50 words per response.
 
-CRITICAL RULES - FOLLOW THESE EXACTLY:
-1. ONLY respond to questions about Haskell, functional programming, or the user's code
-2. NEVER provide complete working solutions - only hints, guidance, and partial examples
-3. Ask questions to guide learning rather than giving answers
-4. Show partial code examples with placeholders (like ? or TODO), not complete working code
-5. Encourage the user to think and discover solutions themselves
-6. Focus on concepts, patterns, and learning approaches
-7. If asked to write a function, provide the type signature and partial implementation with placeholders
+RULES:
+1. ONLY Haskell questions
+2. NO complete solutions - only hints
+3. MAX 50 words total
+4. Use ? placeholders
+5. One short code example max
 
-The user's current code is:
+Current code:
 \`\`\`haskell
 ${code}
 \`\`\`
-${output ? `The last execution output was:
-\`\`\`
-${output}
-\`\`\`` : ''}
+${output ? `Output: \`\`\`${output}\`\`\`` : ''}
 
-When helping with code:
-1. Provide hints and guidance, not complete solutions
-2. Ask leading questions to help the user think
-3. Show partial examples that demonstrate concepts
-4. Explain the reasoning behind suggestions
-5. Encourage experimentation and discovery
-6. Keep responses focused and educational
-7. NEVER provide complete working code - only partial examples or hints
-8. Use placeholders like ? or TODO in code examples
-
-Format code blocks with proper syntax highlighting when showing examples.`;
+Keep it short. Hints only.`;
 
     const stream = await openai.chat.completions.create({
       model: "deepseek-chat",
