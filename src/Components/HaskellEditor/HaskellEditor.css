@@ -37,8 +37,8 @@
   background: #252526;
   color: #d4d4d4;
   position: relative;
-  min-height: 30%;
-  max-height: 35vh;
+  min-height: 22%;
+  max-height: 14vh;
   overflow: hidden; 
   display: flex;
   flex-direction: column;
