@@ -27,7 +27,8 @@
 
 .editor-section {
   flex: 3;
-  min-height: 70%;
+  min-height: 0;
+  overflow: auto;
 }
 
 .output-section {
