@@ -19,6 +19,7 @@
     "multer": "^2.0.2",
     "nodemailer": "^7.0.3",
     "openai": "^4.97.0",
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "^1.1.1",
+    "uuid": "^11.1.0"
   }
 }
