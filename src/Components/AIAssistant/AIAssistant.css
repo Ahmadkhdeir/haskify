@@ -198,3 +198,140 @@
 .apply-code-button:active {
   background: #eceaea;
 }
+
+.generate-quiz-button {
+  background: #D9D9D9;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: 'Jura', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 0.5rem;
+}
+
+.generate-quiz-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.quiz-bubble {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.quiz-question {
+  margin-bottom: 0.5rem;
+}
+.quiz-choice {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Jura', sans-serif;
+  cursor: pointer;
+}
+.quiz-choice.correct {
+  background-color: #e6ffed;
+  border-color: #8cd98c;
+}
+.quiz-choice.incorrect {
+  background-color: #ffe6e6;
+  border-color: #d98c8c;
+}
+
+.error-bubble {
+  background: #ffe6e6;
+  border: 1px solid #d9534f;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin: 1rem 0;
+  color: #a94442;
+  font-family: 'Jura', sans-serif;
+}
+
+.quiz-question,
+.quiz-choice {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+
+.upload-status {
+  align-self: flex-start;
+  margin: -0.25rem 1rem 0.5rem 1rem;
+  font-size: 0.85rem;
+  color: #2f7a2f;
+  opacity: 0.9;
+}
+
+.attachments-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.attachment-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  border-radius: 999px;
+  padding: 4px 8px;
+  max-width: 100%;
+}
+
+.chip-title {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.chip-remove {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+  padding: 0 2px;
+}
+
+.chip-remove:hover {
+  color: #000;
+}
+
+.attach-button {
+  position: absolute;
+  right: 62px;        
+  bottom: 46px;      
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.attach-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.attach-button:hover:not(:disabled) {
+  background: #f6f6f6;
+}
